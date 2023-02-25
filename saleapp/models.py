@@ -30,6 +30,7 @@ class User(BaseModel, UserMixin):
     joined_date = Column(DateTime, default=datetime.now())
     diachi = Column(String(100), nullable=False)
     user_role = Column(Enum(UserRole), default=UserRole.USER)
+    room = relationship('Room', backref='user', lazy=True)
 
     def __str__(self):
         return self.name
@@ -224,12 +225,21 @@ class Regulation(db.Model):
     def get_value(self):
         return self.value
 
+class Room(db.Model):
+    __tablename__ = 'room'
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    name = Column(String(50))
+    message = Column(Text)
+    is_reply = Column(Boolean, default=True)
+    user_id = Column(Integer, ForeignKey(User.id), nullable=False)
+
 
 if __name__ == '__main__':
     with app.app_context():
 
         #db.drop_all()
-        db.create_all()
+        #db.create_all()
 
 
         db.session.commit()
