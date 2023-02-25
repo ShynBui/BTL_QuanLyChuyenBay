@@ -1,0 +1,16 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+.background{
+    height: 100vh;
+    width: 100vw;
+    background-image: url(https://wallpaperaccess.com/full/3482571.jpg);
+    background-size: cover;
+    background-position: center center;
+}
+
+.info-box{
+    background-color: #FFFFFF;
+}
