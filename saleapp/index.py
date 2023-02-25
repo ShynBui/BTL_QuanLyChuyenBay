@@ -120,6 +120,9 @@ def user_load(user_id):
     return untils.get_user_by_id(user_id=user_id)
 
 
+@app.route('/buy-ticker')
+def buy_ticket():
+    return render_template('buyticket.html')
 
 
 if __name__ == '__main__':
