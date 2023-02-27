@@ -30,7 +30,7 @@ class User(BaseModel, UserMixin):
     joined_date = Column(DateTime, default=datetime.now())
     diachi = Column(String(100), nullable=False)
     user_role = Column(Enum(UserRole), default=UserRole.USER)
-    room = relationship('Room', backref='user', lazy=True)
+    message = relationship('Message', backref='user', lazy=True)
 
     def __str__(self):
         return self.name
@@ -230,16 +230,32 @@ class Room(db.Model):
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String(50))
-    message = Column(Text)
     is_reply = Column(Boolean, default=True)
-    user_id = Column(Integer, ForeignKey(User.id), nullable=False)
+    date = Column(DateTime, default=datetime.now())
+    message = relationship('Message', backref='room', lazy=True)
+
+    def __str__(self):
+        return self.name
+
+class Message(db.Model):
+    __tablename__ = 'message'
+
+    id = id = Column(Integer, primary_key=True, autoincrement=True)
+    room_id = Column(Integer, ForeignKey(Room.id), nullable=False, primary_key=True)
+    user_id = Column(Integer, ForeignKey(User.id), nullable=False, primary_key=True)
+
+    content = Column(String(255), default= '')
+    date = Column(DateTime, default= datetime.now())
+
+    def __str__(self):
+        return self.content
 
 
 if __name__ == '__main__':
     with app.app_context():
 
-        #db.drop_all()
-        #db.create_all()
+        # db.drop_all()
+        db.create_all()
 
 
         db.session.commit()

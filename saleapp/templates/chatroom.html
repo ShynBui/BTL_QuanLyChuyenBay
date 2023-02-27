@@ -9,10 +9,16 @@
 
 <h1> Welcome to chatroom: {{room}}</h1>
 
+
+{%for i in range(n)%}
+<div> <b>{{user_send[i]}}</b>: {{message[i + 1].content}} </div>
+
+{%endfor%}
+
 <div id="messages"></div>
 
 <form id="message_input_form">
-    <input type="text" id="message_input" placeholder="Enter message here" ?>
+    <input type="text" id="message_input" placeholder="Enter message here" />
     <button type="submit" name="message">Send</button>
 
 
@@ -29,7 +35,8 @@
         socket.on('connect', function () {
             socket.emit('join_room', {
                 username: "{{ user_name }}",
-                room: "{{ room }}"
+                room: "{{ room }}",
+                room_id: {{room_id}}
             })
 
             let message_input = document.getElementById('message_input')
@@ -40,11 +47,18 @@
                     socket.emit('send_message', {
                         username: "{{ user_name }}",
                         room: "{{ room }}",
-                        message: message
+                        message: message,
                         })
                 }
                 message_input.value = '';
                 message_input.focus();
+
+                console.log("đs")
+                socket.emit('save_message', {
+                    message: message,
+                    room: {{room_id}}
+                    }
+                )
             }
 
         });
@@ -54,6 +68,10 @@
             const newNode = document.createElement('div');
             newNode.innerHTML = `<b>${data.username}:&nbsp;</b> ${data.message}`;
             document.getElementById('messages').appendChild(newNode);
+
+            let all_message = document.getElementById('messages')
+            console.log(all_message)
+
         });
 
         socket.on('join_room_announcement', function (data) {
