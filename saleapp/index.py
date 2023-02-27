@@ -1,7 +1,7 @@
 import math
 import datetime
 from flask import render_template, request, redirect, session, jsonify, url_for
-from saleapp import app, admin, login, untils, socketio
+from saleapp import app, admin, login, untils, socketio, dao
 from saleapp.models import UserRole
 from flask_login import login_user, logout_user, login_required, current_user
 import cloudinary.uploader
@@ -120,9 +120,26 @@ def user_load(user_id):
     return untils.get_user_by_id(user_id=user_id)
 
 
-@app.route('/buy-ticker')
+@app.route('/buy-ticket')
 def buy_ticket():
-    return render_template('buyticket.html')
+    airports = dao.get_airport()
+    return render_template('buyticket.html', airports=airports)
+
+
+@app.route('/buy-ticket/step-2')
+def buy_ticket2():
+    FROM = request.args.get('from')
+    TO = request.args.get('to')
+    date = request.args.get('date')
+    flights = dao.get_flights(FROM, TO, date)
+    for f in flights:
+        f.fa_amount = len(f.airportMediums)
+    return render_template('buyticket2.html', flights=flights)
+
+
+@app.route('/buy-ticket/select-seat')
+def select_seat():
+    return render_template('selectseat.html')
 
 
 if __name__ == '__main__':

@@ -1,0 +1,58 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+
+body{
+    font-size: 13px;
+}
+
+.plane{
+    background: #DCDBDA;
+    width: 20%;
+    position: relative;
+}
+
+ol{
+    list-style: none;
+}
+
+.seats{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: flex-wrap;
+}
+
+.seat{
+    display: flex;
+    flex: 0 0 5%;
+    padding: 5px;
+    position: relative;
+}
+
+.seat label{
+    display: block;
+    position: relative;
+    width: 30px;
+    text-align: center;
+    font-size: 1rem;
+    font-weight: bolder;
+    font-family: Tahoma;
+    border-radius: 2px;
+    background: lime;
+    line-height: 2rem;
+}
+
+.seat label:hover {
+    box-shadow: 0 0 2px 2px green;
+}
+
+.seat input{
+
+}
+.seat input[type=checkbox]{
+    position: absolute;
+    width: 30px;
+    height: 30px;
+}
