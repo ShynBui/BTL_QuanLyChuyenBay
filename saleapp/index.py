@@ -15,13 +15,46 @@ def home():
 
 @app.route("/chatroom")
 def chat_room():
-    user_name = current_user.username
-    room = 123
+    user_name = current_user.name
+    room = untils.get_chatroom_by_user_id(id=current_user.id)
+
+    # print(room.room_id)
+
+    user_send = [untils.get_user_by_id(x.user_id).name for x in untils.load_message(room.room_id)]
+
+    user_send.pop(0)
+
+    print(user_send)
 
     if user_name and room:
-        return render_template('chatroom.html', user_name=user_name, room=room)
+
+        print(untils.load_message(room.room_id)[0].content)
+        return render_template('chatroom.html', user_name=user_name, room=room.room_id, name= current_user.name,
+                               message=untils.load_message(room.room_id), room_id = int(room.room_id),
+                               user_send= user_send, n=len(user_send))
     else:
         return redirect(url_for('home'))
+
+
+@app.route("/admin/chatadmin/<int:room_id>")
+def chat_room_admin(room_id):
+
+    if current_user.user_role == UserRole.ADMIN:
+        print(room_id)
+        user_name = current_user.name
+        room = untils.get_chatroom_by_room_id(id=room_id)
+
+        user_send = [untils.get_user_by_id(x.user_id).name for x in untils.load_message(room.room_id)]
+
+        user_send.pop(0)
+
+        if user_name and room:
+            print(untils.load_message(room.room_id)[0].content)
+            return render_template('chatroom.html', user_name=user_name, room=room.room_id, name=current_user.name,
+                                   message=untils.load_message(room.room_id), room_id=int(room.room_id),
+                                   user_send=user_send, n=len(user_send))
+
+    return redirect(url_for('home'))
 
 
 @socketio.on('send_message')
@@ -30,6 +63,22 @@ def handle_send_message_event(data):
                                                                     data['room'],
                                                                     data['message']))
     socketio.emit('receive_message', data, room=data['room'])
+
+@socketio.on('save_message')
+def handle_save_message_event(data):
+    # app.logger.info("2.all_mess: " + str(data['all_message']))
+    app.logger.info("2.room_id: " + str(data['room']))
+
+    untils.save_chat_message(room_id=int(data['room']), message=data['message'], user_id=current_user.id)
+
+    if (current_user.user_role == UserRole.ADMIN):
+        print("Dd")
+        untils.change_room_status(data['room'], 1)
+
+    if (current_user.user_role == UserRole.USER):
+        print("Dd1")
+        untils.change_room_status(data['room'], 0)
+
 
 @socketio.on('join_room')
 def handle_send_room_event(data):
@@ -120,9 +169,6 @@ def user_load(user_id):
     return untils.get_user_by_id(user_id=user_id)
 
 
-@app.route('/buy-ticker')
-def buy_ticket():
-    return render_template('buyticket.html')
 
 
 if __name__ == '__main__':

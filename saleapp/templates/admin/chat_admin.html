@@ -1,0 +1,41 @@
+{% extends 'admin/base.html'%}
+
+{% block body %}
+
+<h1 class="text-center text-danger">Trang reply</h1>
+<br>
+<h1>Nhân viên: {{user.name}}</h1>
+
+
+<table class = "table table-light table-bordered table-hover">
+    <thead class="thead-dark">
+        <tr>
+            <th>
+                id
+            </th>
+            <th>
+                Tên phòng
+            </th>
+            <th>
+                Trạng thái
+            </th>
+            <th>
+                Đi đến
+            </th>
+        </tr>
+    </thead>
+    {% for c in room %}
+    <tr id = "room{{c.id}}">
+        <td>{{c.id}}</td>
+        <td>{{c.name}}</td>
+        <td>{{c.is_reply}}</td>
+        <td>
+            <a href="{{url_for('chat_room_admin', room_id=c.id)}}">
+                {{c.name}}
+            </a></td>
+    </tr>
+    {% endfor %}
+</table>
+
+
+{%endblock%}
