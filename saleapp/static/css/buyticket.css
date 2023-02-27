@@ -3,6 +3,7 @@
     padding: 0;
     box-sizing: border-box;
 }
+<<<<<<< HEAD
 body{
     font-size: 16px;
 }
@@ -18,11 +19,18 @@ a{
     height: 100vh;
     width: 100%;
     background-image: url(https://i.pinimg.com/originals/b1/f9/c1/b1f9c10d96e19bef8a280718c7b7d2b4.jpg);
+=======
+.background{
+    height: 100vh;
+    width: 100vw;
+    background-image: url(https://wallpaperaccess.com/full/3482571.jpg);
+>>>>>>> 53ddffd1a841d3d39424675f39531e71cdfe1215
     background-size: cover;
     background-position: center center;
 }
 
 .info-box{
+<<<<<<< HEAD
     background: rgba(200,200,200,0.2);
     padding: 30px;
     box-shadow: 0px 5px 10px 0px rgba(0,0,0,0.2);
@@ -78,4 +86,7 @@ a{
 input:focus{
     box-shadow:0 0 0 0px red;
     background: transparent;
+=======
+    background-color: #FFFFFF;
+>>>>>>> 53ddffd1a841d3d39424675f39531e71cdfe1215
 }
