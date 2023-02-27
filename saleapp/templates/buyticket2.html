@@ -1,0 +1,90 @@
+{% extends 'buyticket.html' %}
+
+{% block extra %}
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" rel="stylesheet"/>
+{%endblock%}
+{% block css %}
+<link href="{{ url_for('static', filename='css/buyticket.css') }}"
+      rel="stylesheet"/>
+{%endblock%}
+
+{% block title %} Mua vé {% endblock %}
+
+{% block content %}
+<div class="base bg-secondary p-5">
+    <div class="container-fluid p-5">
+        {% for f in flights %}
+        <div class="grid bg-white my-3 p-4 rounded-3">
+            <div class="row">
+                <span class="my-sub-text text-secondary">Mã chuyến bay: {{f.id}}</span>
+            </div>
+            <div class="d-flex">
+                <div class="col-9 pe-5">
+                    <div class="d-flex align-items-center">
+                        <div class="text-center">
+                            <div class="my-primary-text">{{f.departing_at.strftime('%H:%M')}}</div>
+                            <div>{{f.airline.departing_airport.code}}</div>
+                        </div>
+                        <div class="w-100 text-center">
+                            <i class="fa-solid fa-plane fs-5 my-primary-text"></i>
+                        </div>
+                        <div class="text-center">
+                            <div class="my-primary-text">{{f.arriving_at.strftime('%H:%M')}}</div>
+                            <div>{{f.airline.arriving_airport.code}}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <button class="p-3 button my-btn w-100 h-100">
+                        <div class="text-dark fs-6">Giá từ</div>
+                        <div class="text-dark fs-5">{{f.prices[1].price*1000}}</div>
+                    </button>
+                </div>
+            </div>
+            <div>
+                <a class="text-secondary" data-toggle="collapse" href="#f-{{f.id}}" role="button"
+                   aria-expanded="false" aria-controls="collapseExample">
+                    Xem chi tiết <i class="fa-solid fa-caret-right my-secondary-text"></i>
+                </a>
+            </div>
+            <div class="collapse mt-3" id="f-{{f.id}}">
+                <div class="card card-body text-dark">
+                    <div>
+                        <div class="my-secondary-text">{{f.departing_at.strftime('%d thg %m, %H:%M')}}</div>
+                        <div class="my-primary-text">{{f.airline.departing_airport.location}}</div>
+                        <div>{{f.airline.departing_airport}} ({{f.airline.departing_airport.code}})</div>
+                    </div>
+                    <div class="myline"></div>
+                    {% if f.fa_amount > 0 %}
+                    {% for fa in f.airportMediums %}
+                    <div>
+                        <div class="my-secondary-text">{{fa.stop_time_begin.strftime('%d thg %m, %H:%M')}}</div>
+                        <div class="my-primary-text">{{fa.airport.location}}</div>
+                        <div>{{fa.airport.name}} ({{fa.airport.code}})</div>
+                    </div>
+
+                    <div class="mt-4">
+                        <div class="my-secondary-text">{{fa.stop_time_finish.strftime('%d thg %m, %H:%M')}}</div>
+                        <div class="my-primary-text">{{fa.airport.location}}</div>
+                        <div>{{fa.airport.name}} ({{fa.airport.code}})</div>
+                        <div class="myline"></div>
+                    </div>
+                    {% endfor %}
+                    {% endif %}
+                    <div>
+                        <div class="my-secondary-text">{{f.arriving_at.strftime('%d thg %m, %H:%M')}}</div>
+                        <div class="my-primary-text">{{f.airline.arriving_airport.location}}</div>
+                        <div>{{f.airline.arriving_airport}} ({{f.airline.arriving_airport.code}})</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}
+
+{% block footer %}
+    {%endblock%}
+

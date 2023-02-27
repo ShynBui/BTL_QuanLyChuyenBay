@@ -1,0 +1,79 @@
+{% extends 'layout/base.html' %}
+
+{% block css %}
+<link href="{{ url_for('static', filename='css/selectseat.css') }}" rel="stylesheet"/>{% endblock %}
+{% block js %}{%endblock%}
+{% block title %}Chọn chỗ ngồi{% endblock %}
+
+{% block content %}
+<div class="plane">
+    <div class="d-flex">
+        <div class="d-flex left-seats">
+            <div class="d-flex flex-column">
+                <div>
+                    <input type="checkbox" id="1A">
+                    <label for="1A">1A</label>
+                </div>
+                <div>
+                    <input type="checkbox" id="2A">
+                    <label for="2A">2A</label>
+                </div>
+                <div>
+                    <input type="checkbox" id="3A">
+                    <label for="3A">3A</label>
+                </div>
+            </div>
+            <div class="d-flex">
+                <div class="d-flex flex-column">
+                    <div>
+                        <input type="checkbox" id="1B">
+                        <label for="1B">1B</label>
+                    </div>
+                    <div>
+                        <input type="checkbox" id="2B">
+                        <label for="2B">2B</label>
+                    </div>
+                    <div>
+                        <input type="checkbox" id="3B">
+                        <label for="3B">3B</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="d-flex right-seats">
+            <div class="d-flex">
+                <div class="d-flex flex-column">
+                    <div>
+                        <input type="checkbox" id="1C">
+                        <label for="1C">1C</label>
+                    </div>
+                    <div>
+                        <input type="checkbox" id="2C">
+                        <label for="2C">2C</label>
+                    </div>
+                    <div>
+                        <input type="checkbox" id="3C">
+                        <label for="3C">3C</label>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex">
+                <div class="d-flex flex-column">
+                    <div>
+                        <input type="checkbox" id="1D">
+                        <label for="1D">1D</label>
+                    </div>
+                    <div>
+                        <input type="checkbox" id="2D">
+                        <label for="2D">2D</label>
+                    </div>
+                    <div>
+                        <input type="checkbox" id="3D">
+                        <label for="3D">3D</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
