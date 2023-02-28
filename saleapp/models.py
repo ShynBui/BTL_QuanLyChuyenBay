@@ -84,7 +84,7 @@ class Rank(BaseModel):
 
 class Seat(BaseModel):
     name = Column(String(3), nullable=False)
-    available = Column(Boolean, nullable=False, default=True)
+    status = Column(Boolean, nullable=False, default=True)
     rank_id = Column(Integer, ForeignKey(Rank.id), nullable=False)
     tickets = relationship('PlaneTicket', backref='seat', lazy=True)
 

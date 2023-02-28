@@ -24,5 +24,26 @@ def get_airport():
     return Airport.query.all()
 
 
+def get_flight(id):
+    return Flight.query.filter(Flight.id.__eq__(id)).first()
 
 
+def get_seat(rank_id=None):
+    s = Seat.query
+    if rank_id:
+        s.filter(Seat.rank_id.__eq__(rank_id))
+    return s.all()
+
+
+def is_seat_available(seat_id, flight_id):
+    tickets_of_flight = PlaneTicket.query.filter(and_(PlaneTicket.flight_id.__eq__(flight_id),
+                                                      PlaneTicket.seat_id.__eq__(seat_id)))
+    t = tickets_of_flight.first()
+    if t is None:
+        return True
+    else:
+        return False
+
+
+# if __name__ == '__main__':
+#     with app.app_context():

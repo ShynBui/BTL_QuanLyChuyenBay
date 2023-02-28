@@ -18,6 +18,8 @@ cloudinary.config(
     api_secret="a9xaGBMJr7KgKhJa-1RpSpx_AmU"
 )
 
+app.config['CART_KEY'] = 'cart'
+
 db = SQLAlchemy(app=app)
 login = LoginManager(app=app)
 socketio = SocketIO(app)

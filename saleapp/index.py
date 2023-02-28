@@ -186,9 +186,30 @@ def buy_ticket2():
     return render_template('buyticket2.html', flights=flights)
 
 
-@app.route('/buy-ticket/select-seat')
-def select_seat():
-    return render_template('selectseat.html')
+@app.route('/api/cart/select-flight-<flight_id>')
+def select_flight(flight_id):
+    key = app.config['CART_KEY']
+    if key not in session:
+        session[key] = {}
+    cart = session.get(key)
+    cart["flight_id"] = flight_id
+    return jsonify(cart)
+
+
+@app.route('/buy-ticket/step-3')
+def buy_ticket3():
+    key = app.config['CART_KEY']
+    if key not in session or "flight_id" not in session[key]:
+        redirect("/buy-ticket", code=404)
+    cart = session.get(key)
+    flight_id = cart["flight_id"]
+    vip_seats = dao.get_seat(1)
+    seats = dao.get_seat(2)
+    for vs in vip_seats:
+        vs.available = dao.is_seat_available(seat_id=vs.id, flight_id=flight_id)
+    for s in seats:
+        s.available = dao.is_seat_available(seat_id=s.id, flight_id=flight_id)
+    return render_template('selectseat.html', vip_seats=vip_seats, seats=seats)
 
 
 if __name__ == '__main__':
