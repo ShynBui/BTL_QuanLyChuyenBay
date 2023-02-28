@@ -3,9 +3,20 @@
     padding: 0;
     box-sizing: border-box;
 }
-<<<<<<< HEAD
+
+@font-face {
+  font-family: my-title-font;
+  src: url('../fonts/Montserrat-ExtraBold.ttf');
+}
+@font-face {
+  font-family: my-font;
+  src: url('../fonts/Montserrat-Medium.ttf');
+}
+
+
 body{
     font-size: 16px;
+    font-family: my-font;
 }
 a{
     text-decoration: none;
@@ -16,41 +27,44 @@ a{
     --dark-color: #1E3D58;
 }
 .background{
-    height: 100vh;
     width: 100%;
-    background-image: url(https://i.pinimg.com/originals/b1/f9/c1/b1f9c10d96e19bef8a280718c7b7d2b4.jpg);
-=======
-.background{
-    height: 100vh;
-    width: 100vw;
-    background-image: url(https://wallpaperaccess.com/full/3482571.jpg);
->>>>>>> 53ddffd1a841d3d39424675f39531e71cdfe1215
+    background-image: url(https://www.donatella-tur.md/uploads/menu/img-plane-tickets-1593356694.jpg);
     background-size: cover;
+    background-repeat:no-repeat;
+    background-attachment: fixed;
     background-position: center center;
 }
-
 .info-box{
-<<<<<<< HEAD
-    background: rgba(200,200,200,0.2);
+    background: linear-gradient(135deg, rgba(210,230,250,0.1), rgba(255,255,255,0));
     padding: 30px;
-    box-shadow: 0px 5px 10px 0px rgba(0,0,0,0.2);
-    backdrop-filter: blur(10px);
+    box-shadow: 10px 10px 20px rgba(0,0,0,0.2);
+    border: 2px solid rgba(255,255,255,0.17);
+    backdrop-filter: blur(15px);
 }
 
 .text{
     opacity: 1 !important;
     color: #FFF !important;
 }
-.info-box input , .info-box select{
+.info-box input, .info-box select{
     background: transparent;
     border: none;
     border-radius: 0;
     border-bottom: 2px solid #FFF;
 }
+
+
+.info-box input:focus, .info-box select:focus{
+    background: transparent;
+    border-bottom: 2px solid var(--primary-color);
+}
+
+
 .introduce h1{
     color: var(--primary-color);
     text-shadow: 2px 2px 3px rgba(0,0,0,0.2);
-    font-size: 2.25rem;
+    font-size: 3rem;
+    font-family: my-title-font;
 }
 
 .myline{
@@ -86,7 +100,5 @@ a{
 input:focus{
     box-shadow:0 0 0 0px red;
     background: transparent;
-=======
-    background-color: #FFFFFF;
->>>>>>> 53ddffd1a841d3d39424675f39531e71cdfe1215
 }
+

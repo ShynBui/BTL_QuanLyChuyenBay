@@ -36,194 +36,124 @@ class User(BaseModel, UserMixin):
         return self.name
 
 
-class Profile(db.Model):
-    __tablename__ = 'profiles'
-
-    serial = Column(Integer, primary_key=True, autoincrement=True)
-    id = Column(String(12), nullable=False)
+class Customer(BaseModel):
+    serial = Column(String(25), nullable=False)
     name = Column(String(50), nullable=False)
-    gender = Column(String(50), nullable=False)
+    gender = Column(String(10), nullable=False)
     dob = Column(DateTime, nullable=False)
-    email = Column(String(50), nullable=False)
-    phone = Column(String(10), nullable=False)
-    isSupervisor = Column(Boolean, default=False)
+    email = Column(String(100), nullable=False)
+    phone = Column(String(20), nullable=False)
+    tickets = relationship('PlaneTicket', backref='customer', lazy=True)
 
     def __str__(self):
-        return str(self.id)
+        return self.name
 
 
-class AirPlane(db.Model):
-    __tablename__ = 'airplanes'
-
-    id = Column(String(10), primary_key=True)
-    name = Column(String(50), nullable=False)
-    manufacturer = Column(String(50), nullable=False)
-    total_seat = Column(Integer, nullable=False)
+class Airplane(BaseModel):
+    name = Column(String(50), nullable=False, unique=True)
     image = Column(String(100))
+    flights = relationship('Flight', backref='airplane', lazy=True)
 
     def __str__(self):
-        return str(self.id)
+        return self.name
 
 
-class AirPort(db.Model):
-    __tablename__ = 'airports'
-
-    id = Column(Integer, primary_key=True, autoincrement=True)
+class Airport(BaseModel):
     name = Column(String(50), nullable=False)
     image = Column(String(100))
+    code = Column(String(10), nullable=False, unique=True)
     location = Column(String(100), nullable=False)
+    FAMediums = relationship('Flight_AirportMedium', backref='airport', lazy=True)
+    departing_airline = relationship("Airline", primaryjoin="Airline.departing_airport_id==Airport.id",
+                                     backref="departing_airport", lazy=True)
+    arriving_airline = relationship("Airline", primaryjoin="Airline.arriving_airport_id==Airport.id",
+                                    backref="arriving_airport", lazy=True)
 
     def __str__(self):
-        return str(self.name)
+        return self.name
 
 
-class AirLine(db.Model):
-    __tablename__ = 'airlines'
-
-    id = Column(String(10), primary_key=True)
-    name = Column(String(100), nullable=False)
-
-    from_airport_id = Column(Integer, ForeignKey(AirPort.id, ondelete="CASCADE", onupdate="cascade"), nullable=False)
-    to_airport_id = Column(Integer, ForeignKey(AirPort.id, ondelete="CASCADE"), nullable=False)
-
-    from_airport = relationship("AirPort", foreign_keys=[from_airport_id], lazy=True,
-                                passive_deletes=True, cascade="all, delete")
-    to_airport = relationship("AirPort", foreign_keys=[to_airport_id], lazy=True,
-                              passive_deletes=True, cascade="all, delete")
+class Rank(BaseModel):
+    name = Column(String(25), nullable=False)
+    seats = relationship('Seat', backref='seat', lazy=True)
+    prices = relationship('PriceOfFlight', backref='rank', lazy=True)
 
     def __str__(self):
-        return str(self.name)
+        return self.name
 
 
-flight_regulation = db.Table('flight_regulation',
-    Column('flight_id', String(10), ForeignKey('flights.id', ondelete="CASCADE", onupdate="cascade"), primary_key=True),
-    Column('regulation_id', Integer, ForeignKey('regulations.id', ondelete="CASCADE", onupdate="cascade"), primary_key=True)
-)
+class Seat(BaseModel):
+    name = Column(String(3), nullable=False)
+    available = Column(Boolean, nullable=False, default=True)
+    rank_id = Column(Integer, ForeignKey(Rank.id), nullable=False)
+    tickets = relationship('PlaneTicket', backref='seat', lazy=True)
+
+    def __str__(self):
+        return self.name
 
 
-class Flight(db.Model):
-    __tablename__ = 'flights'
+class PurchaseOrder(BaseModel):
+    total = Column(Float, nullable=False)
+    orderDate = Column(DateTime, default=datetime.now())
+    tickets = relationship('PlaneTicket', backref='order', lazy=True)
+    user_id = Column(Integer, ForeignKey(User.id), nullable=False)
 
-    id = Column(String(10), primary_key=True)
-    name = Column(String(50), nullable=False)
+    def __str__(self):
+        return self.id
+
+
+class Airline(BaseModel):
+    departing_airport_id = Column(Integer, ForeignKey(Airport.id), nullable=False)
+    arriving_airport_id = Column(Integer, ForeignKey(Airport.id), nullable=False)
+    flights = relationship('Flight', backref='airline', lazy=True)
+
+    def __str__(self):
+        return f'{self.departing_airport.name} {self.arriving_airport.name}'
+
+
+class Flight(BaseModel):
     departing_at = Column(DateTime, nullable=False)
     arriving_at = Column(DateTime, nullable=False)
-
-    plane_id = (Column(String(10), ForeignKey(AirPlane.id, ondelete="CASCADE", onupdate="cascade"), nullable=False))
-    airline_id = (Column(String(10), ForeignKey(AirLine.id, ondelete="CASCADE", onupdate="cascade"), nullable=False))
-    planes = relationship("AirPlane", foreign_keys=[plane_id], lazy=True,
-                          passive_deletes=True, cascade="all, delete")
-    airlines = relationship("AirLine", foreign_keys=[airline_id], lazy=True,
-                            passive_deletes=True, cascade="all, delete")
-
-    regulations = relationship("Regulation", secondary=flight_regulation, lazy='subquery',
-                            backref=backref('regulations', lazy=True), passive_deletes=True, cascade="all, delete")
+    airplane_id = Column(Integer, ForeignKey(Airplane.id), nullable=False)
+    airline_id = Column(Integer, ForeignKey(Airline.id), nullable=False)
+    airportMediums = relationship('Flight_AirportMedium', backref='flight', lazy=True)
+    tickets = relationship('PlaneTicket', backref='flight', lazy=True)
+    prices = relationship('PriceOfFlight', backref='flight', lazy=True)
 
     def __str__(self):
-        return str(self.name)
+        return f'từ {self.airline.departing_airport.name} đến {self.airline.arriving_airport.name}'
 
 
-class Seat(db.Model):
-    __tablename__ = 'seats'
-
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    name = Column(String(50), nullable=False)
-    status = Column(Boolean, default=False)
-
-    flight_id = Column(String(10), ForeignKey(Flight.id, ondelete="CASCADE", onupdate="cascade"), nullable=False)
-    flights = relationship("Flight", foreign_keys=[flight_id], lazy=True,
-                           passive_deletes=True, cascade="all, delete")
+class PriceOfFlight(BaseModel):
+    rank_id = Column(Integer, ForeignKey(Rank.id), nullable=False)
+    flight_id = Column(Integer, ForeignKey(Flight.id), nullable=False)
+    price = Column(Float, nullable=False)
 
     def __str__(self):
-        return str(self.id)
+        return self.price
 
 
-class FA_Regulation(db.Model):
-    flight_id = Column(String(10), ForeignKey('flight_airport_mediums.flight_id', ondelete="CASCADE",
-                            onupdate="cascade"), primary_key=True)
-    airport_id = Column(Integer, ForeignKey('flight_airport_mediums.airport_medium_id', ondelete="CASCADE",
-                            onupdate="cascade"), primary_key=True)
-    regulation_id = Column(Integer, ForeignKey('regulations.id', ondelete="CASCADE",
-                                                onupdate="cascade"), primary_key=True)
-
-    flights = relationship("Flight_AirportMedium", foreign_keys=[flight_id], lazy='subquery',
-                           passive_deletes=True, cascade="all, delete")
-    airports = relationship("Flight_AirportMedium", foreign_keys=[airport_id], lazy='subquery',
-                           passive_deletes=True, cascade="all, delete")
-    regs = relationship("Regulation", foreign_keys=[regulation_id], lazy='subquery',
-                        passive_deletes=True, cascade="all, delete")
-
-
-class Flight_AirportMedium(db.Model):
-    __tablename__ = 'flight_airport_mediums'
-
-    name = Column(String(50), nullable=False)
+class Flight_AirportMedium(BaseModel):
     stop_time_begin = Column(DateTime, nullable=False)
     stop_time_finish = Column(DateTime, nullable=False)
     description = Column(Text)
-
-    flight_id = Column(String(10), ForeignKey(Flight.id, ondelete="CASCADE", onupdate="cascade"), primary_key=True)
-    airport_medium_id = Column(Integer, ForeignKey(AirPort.id, ondelete="CASCADE", onupdate="cascade"), primary_key=True)
-    flights = relationship("Flight", foreign_keys=[flight_id], lazy=True,
-                           passive_deletes=True, cascade="all, delete")
-    airports = relationship("AirPort", foreign_keys=[airport_medium_id], lazy=True,
-                            passive_deletes=True, cascade="all, delete")
+    airport_id = Column(Integer, ForeignKey(Airport.id), nullable=False)
+    flight_id = Column(Integer, ForeignKey(Flight.id), nullable=False)
 
     def __str__(self):
-        return str(self.name)
+        return self.airport.name
 
 
-ticket_regulation = db.Table('ticket_regulation',
-    Column('ticket_id', Integer, ForeignKey('tickets.id', ondelete="CASCADE", onupdate="cascade"), primary_key=True),
-    Column('regulation_id', Integer, ForeignKey('regulations.id', ondelete="CASCADE", onupdate="cascade"), primary_key=True)
-)
-
-
-class PlaneTicket(db.Model):
-    __tablename__ = 'tickets'
-
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    rank = Column(Integer, nullable=False)
-    price = Column(DECIMAL(18, 2), nullable=False)
-    date = Column(DateTime, default=datetime.now())
-
-    place = Column(Integer, ForeignKey(AirPort.id, ondelete="CASCADE", onupdate="cascade"))
-    profile_id = (Column(Integer, ForeignKey(Profile.serial, ondelete="CASCADE", onupdate="cascade"), nullable=False))
-    flight_id = (Column(String(10), ForeignKey(Flight.id, ondelete="CASCADE", onupdate="cascade"), nullable=False))
-    seat_id = (Column(Integer, ForeignKey(Seat.id, ondelete="CASCADE", onupdate="cascade"), nullable=False))
-    user_id = (Column(Integer, ForeignKey(User.id, ondelete="CASCADE", onupdate="cascade")))
-
-    places = relationship("AirPort", foreign_keys=[place], lazy=True,
-                          cascade="all, delete", passive_deletes=True)
-    profiles = relationship("Profile", foreign_keys=[profile_id], lazy=True,
-                            cascade="all, delete", passive_deletes=True)
-    flights = relationship("Flight", foreign_keys=[flight_id], lazy=True,
-                           cascade="all, delete", passive_deletes=True)
-    seats = relationship("Seat", foreign_keys=[seat_id], lazy=True, uselist=False,
-                         cascade="all, delete", passive_deletes=True)
-    users = relationship("User", foreign_keys=[user_id], lazy=True,
-                         cascade="all, delete", passive_deletes=True)
+class PlaneTicket(BaseModel):
+    subTotal = Column(Float, nullable=False)
+    seat_id = Column(Integer, ForeignKey(Seat.id), nullable=False)
+    customer_id = Column(Integer, ForeignKey(Customer.id), nullable=False)
+    order_id = Column(Integer, ForeignKey(PurchaseOrder.id), nullable=False)
+    flight_id = Column(Integer, ForeignKey(Flight.id), nullable=False)
 
     def __str__(self):
-        return str(self.id)
+        return self.id
 
-
-class Regulation(db.Model):
-    __tablename__ = 'regulations'
-
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    name = Column(String(50), nullable=False, unique=True)
-    value = Column(String(50), nullable=False)
-    description = Column(Text)
-
-    tickets = relationship("PlaneTicket", secondary=ticket_regulation, lazy='subquery',
-                        backref=backref('tickets', lazy=True), passive_deletes=True, cascade="all, delete")
-
-    def __str__(self):
-        return str(self.id)
-
-    def get_value(self):
-        return self.value
 
 class Room(db.Model):
     __tablename__ = 'room'
@@ -253,9 +183,70 @@ class Message(db.Model):
 
 if __name__ == '__main__':
     with app.app_context():
-
-        # db.drop_all()
+        db.drop_all()
         db.create_all()
 
+        a1 = Airplane(name="A001")
+        a2 = Airplane(name="A002")
+        a3 = Airplane(name="A003")
+        a4 = Airplane(name="A004")
+        a5 = Airplane(name="A005")
+        db.session.add_all([a1, a2, a3, a4, a5])
+
+        ap1 = Airport(name="Sân bay QT Nội Bài", code="HAN", location="Hà Nội")
+        ap2 = Airport(name="Sân bay QT Tân Sơn Nhất", code="SGN", location="Hồ Chí Minh")
+        ap3 = Airport(name="Sân bay QT Đà Nẵng", code="DAD", location="Đà Nẵng")
+        ap4 = Airport(name="Sân bay QT Phú Quốc", code="PQC", location="Kiên Giang")
+        ap = [ap1, ap2, ap3, ap4]
+        db.session.add_all(ap)
+
+        r1 = Rank(name="Thương gia")
+        r2 = Rank(name="Phổ thông")
+        db.session.add_all([r1, r2])
+
+        # Khởi tạo ghế thương gia
+        for i in range(4):
+            col = chr(65 + i)
+            for j in range(4):
+                name = str(col) + "0" + str(j+1)
+                s = Seat(name=name, rank_id=1)
+                db.session.add(s)
+
+        # Khởi tạo ghế phổ thông
+        for i in range(4):
+            col = chr(65 + i)
+            for j in range(4, 14):
+                if j < 9:
+                    row = "0" + str(j+1)
+                else:
+                    row = str(j+1)
+                name = str(col) + row
+                s = Seat(name=name, rank_id=2)
+                db.session.add(s)
+
+        # Khởi tạo airline
+        for i in range(len(ap)):
+            for j in range(len(ap)):
+                if i != j:
+                    al = Airline(departing_airport_id=i + 1, arriving_airport_id=j + 1)
+                    db.session.add(al)
+
+        # Khởi tạo flight
+        f1 = Flight(departing_at="2023-03-03 05:00", arriving_at="2023-03-03 07:15", airplane_id=1, airline_id=4)
+        p11 = PriceOfFlight(rank_id=1, flight=f1, price="6000")
+        p12 = PriceOfFlight(rank_id=2, flight=f1, price="1900")
+        db.session.add_all([f1, p11, p12])
+
+        f2 = Flight(departing_at="2023-03-03 07:00", arriving_at="2023-03-03 09:15", airplane_id=2, airline_id=4)
+        p21 = PriceOfFlight(rank_id=1, flight=f2, price="6000")
+        p22 = PriceOfFlight(rank_id=2, flight=f2, price="2300")
+        db.session.add_all([f2, p21, p22])
+
+        f3 = Flight(departing_at="2023-03-03 11:45", arriving_at="2023-03-03 19:40", airplane_id=3, airline_id=4)
+        p31 = PriceOfFlight(rank_id=1, flight=f3, price="9000")
+        p32 = PriceOfFlight(rank_id=2, flight=f3, price="2600")
+        fa31 = Flight_AirportMedium(stop_time_begin="2023-03-03 13:35", stop_time_finish="2023-03-03 18:45",
+                                    airport_id=3, flight=f3)
+        db.session.add_all([f3, p31, p32, fa31])
 
         db.session.commit()

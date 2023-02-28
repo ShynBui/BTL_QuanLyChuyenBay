@@ -6,30 +6,22 @@
 <script defer src="{{ url_for('static', filename='js/decorator.js') }}"></script>
 {%endblock%}
 
-<<<<<<< HEAD
 
-=======
->>>>>>> 53ddffd1a841d3d39424675f39531e71cdfe1215
 {% block title %}Đặt vé{% endblock %}
 
 
 {% block content %}
-<<<<<<< HEAD
-<div class="background base">
+<div class="background base vh-100">
     <div class="d-flex justify-content-around h-100 align-items-center">
-=======
-<section class="background">
-    <div class="row">
->>>>>>> 53ddffd1a841d3d39424675f39531e71cdfe1215
         <div class="introduce col-4">
             <h1>ĐẶT CHUYẾN BAY CHO BẠN NGAY HÔM NAY</h1>
             <p>Trang website của chúng tôi sẽ giúp bạn tìm kiếm, đặt chuyến bay uy tín và thuận tiện nhất</p>
         </div>
-<<<<<<< HEAD
         <form action="buy-ticket/step-2" class="info-box col-5 p-5 rounded-3">
-            <h3 class="text text-center fs-2">ĐẶT CHUYẾN BAY</h3>
+            <h3 class="text-center fs-2">ĐẶT CHUYẾN BAY</h3>
             <div class="form-floating my-2">
-                <select class="text-dark form-select" name="from" aria-label="Floating label select example">
+                <select required class="text-dark form-select shadow-none" name="from"
+                        aria-label="Floating label select example">
                     <option value="" selected>Địa điểm xuất phát</option>
                     {% for a in airports %}
                     <option value="{{a.code}}">{{a.location}} ({{a.code}})</option>
@@ -37,7 +29,7 @@
                 </select>
             </div>
             <div class="form-floating my-2">
-                <select class="text-dark form-select" name="to" aria-label="Floating label select example">
+                <select required class="text-dark form-select shadow-none" name="to" aria-label="Floating label select example">
                     <option value="" selected>Địa điểm đến</option>
                     {% for a in airports %}
                     <option value="{{a.code}}">{{a.location}} ({{a.code}})</option>
@@ -45,14 +37,15 @@
                 </select>
             </div>
             <div class="form-floating mb-3 mt-3">
-                <input type="date" class="text-dark form-control text-white" id="date" name="date">
-                <label class="text" for="date">Ngày xuất phát</label>
+                <input required type="date" class="text-dark form-control shadow-none" id="date" name="date">
+                <label class="" for="date">Ngày xuất phát</label>
             </div>
 
             <div class="form-floating mt-3 mb-3">
-                <input type="number" min="1" class="text-dark form-control" placeholder="Nhập số khách">
-                <label class="text" >Số khách</label>
+                <input id="guest" name="guest" type="number" min="1" class="text-dark form-control shadow-none" placeholder="Nhập số khách">
+                <label for="guest">Số khách</label>
             </div>
+
             <button type="submit" class="mt-3 p-3 btn my-btn w-100 text-white fs-5">Tiếp tục</button>
         </form>
     </div>
@@ -60,34 +53,4 @@
 {% endblock %}
 
 {% block footer %}
-    {%endblock%}
-=======
-        <div class="info-box col-8">
-            <h4>Địa điểm đến</h4>
-            <select class="form-select" aria-label="Default select example">
-                <option selected>Open this select menu</option>
-                <option value="1">One</option>
-                <option value="2">Two</option>
-                <option value="3">Three</option>
-            </select>
-            <h4>Địa điểm khởi hành</h4>
-            <select class="form-select" aria-label="Default select example">
-                <option selected>Open this select menu</option>
-                <option value="1">One</option>
-                <option value="2">Two</option>
-                <option value="3">Three</option>
-            </select>
-            <div class="form-floating mb-3 mt-3">
-                <input type="text" class="form-control" id="email" placeholder="Enter email" name="email">
-                <label for="email">Email</label>
-            </div>
-
-            <div class="form-floating mt-3 mb-3">
-                <input type="text" class="form-control" id="pwd" placeholder="Enter password" name="pswd">
-                <label for="pwd">Password</label>
-            </div>
-        </div>
-    </div>
-</section>
-{% endblock %}
->>>>>>> 53ddffd1a841d3d39424675f39531e71cdfe1215
+{%endblock%}
