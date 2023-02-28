@@ -169,7 +169,6 @@ def user_load(user_id):
     return untils.get_user_by_id(user_id=user_id)
 
 
-<<<<<<< HEAD
 @app.route('/buy-ticket')
 def buy_ticket():
     airports = dao.get_airport()
@@ -190,8 +189,6 @@ def buy_ticket2():
 @app.route('/buy-ticket/select-seat')
 def select_seat():
     return render_template('selectseat.html')
-=======
->>>>>>> 53ddffd1a841d3d39424675f39531e71cdfe1215
 
 
 if __name__ == '__main__':

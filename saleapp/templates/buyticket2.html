@@ -11,7 +11,7 @@
 {% block title %} Mua vé {% endblock %}
 
 {% block content %}
-<div class="base bg-secondary p-5">
+<div class="base background test bg-secondary p-5">
     <div class="container-fluid p-5">
         {% for f in flights %}
         <div class="grid bg-white my-3 p-4 rounded-3">
@@ -35,9 +35,14 @@
                     </div>
                 </div>
                 <div class="col-3">
-                    <button class="p-3 button my-btn w-100 h-100">
-                        <div class="text-dark fs-6">Giá từ</div>
-                        <div class="text-dark fs-5">{{f.prices[1].price*1000}}</div>
+                    <button class="p-3 button my-btn w-100 h-100 text-start d-flex align-items-center justify-content-between">
+                        <div>
+                            <div class="text-dark fs-6">Giá từ</div>
+                            <div class="text-dark fs-5">{{"{:,.0f}".format(f.prices[1].price*1000)}} VNĐ</div>
+                        </div>
+                        <div>
+                            <i class="fs-4 fa-solid fa-caret-right"></i>
+                        </div>
                     </button>
                 </div>
             </div>
