@@ -30,12 +30,20 @@
             {% for i in range(2) %}
             <div>
                 {% for j in range(vs_count) %}
+                    {% if vip_seats[i][j].available %}
                     <div onclick="selectSeat(this, {{vip_seats[i][j].id}}, '{{vip_seats[i][j]}}', '{{vip_seats[i][j].rank.id}}')"
                          class="seat vip-seat cell mx-2 my-3"></div>
+                    {% else %}
+                    <div class="seat unavailable cell mx-2 my-3"></div>
+                    {% endif %}
                 {% endfor %}
                 {% for x in range(s_count) %}
+                    {% if seats[i][x].available %}
                     <div onclick="selectSeat(this, {{seats[i][x].id}}, '{{seats[i][x]}}', '{{seats[i][x].rank.id}}')"
                          class="seat cell mx-2 my-3"></div>
+                    {% else %}
+                    <div class="seat unavailable cell mx-2 my-3"></div>
+                    {% endif %}
                 {% endfor %}
             </div>
             {% endfor %}
@@ -50,12 +58,20 @@
             {% for k in range(2, 4) %}
             <div>
                 {% for j in range(vs_count) %}
+                    {% if seats[k][j].available %}
                     <div onclick="selectSeat(this, {{vip_seats[k][j].id}}, '{{vip_seats[k][j]}}', '{{vip_seats[k][j].rank.id}}')"
                          class="seat vip-seat cell mx-2 my-3"></div>
+                    {% else %}
+                    <div class="seat unavailable cell mx-2 my-3"></div>
+                    {% endif %}
                 {% endfor %}
                 {% for x in range(s_count) %}
+                    {% if seats[k][x].available %}
                     <div onclick="selectSeat(this, {{seats[k][x].id}}, '{{seats[k][x]}}', '{{seats[k][x].rank.id}}')"
                          class="seat cell mx-2 my-3"></div>
+                    {% else %}
+                    <div class="seat unavailable cell mx-2 my-3"></div>
+                    {% endif %}
                 {% endfor %}
             </div>
             {% endfor %}
