@@ -1,17 +1,19 @@
 import math
 import datetime
 from flask import render_template, request, redirect, session, jsonify, url_for
-from saleapp import app, admin, login, untils, socketio, dao
+from saleapp import app, admin, login, untils, socketio, dao, utils
 from saleapp.models import UserRole
 from flask_login import login_user, logout_user, login_required, current_user
 import cloudinary.uploader
 from flask_socketio import SocketIO, emit, join_room
 
+
 @app.route("/")
 def home():
     return render_template('index.html')
 
-#socket
+
+# socket
 
 @app.route("/chatroom")
 def chat_room():
@@ -29,16 +31,15 @@ def chat_room():
     if user_name and room:
 
         print(untils.load_message(room.room_id)[0].content)
-        return render_template('chatroom.html', user_name=user_name, room=room.room_id, name= current_user.name,
-                               message=untils.load_message(room.room_id), room_id = int(room.room_id),
-                               user_send= user_send, n=len(user_send))
+        return render_template('chatroom.html', user_name=user_name, room=room.room_id, name=current_user.name,
+                               message=untils.load_message(room.room_id), room_id=int(room.room_id),
+                               user_send=user_send, n=len(user_send))
     else:
         return redirect(url_for('home'))
 
 
 @app.route("/admin/chatadmin/<int:room_id>")
 def chat_room_admin(room_id):
-
     if current_user.user_role == UserRole.ADMIN:
         print(room_id)
         user_name = current_user.name
@@ -63,6 +64,7 @@ def handle_send_message_event(data):
                                                                     data['room'],
                                                                     data['message']))
     socketio.emit('receive_message', data, room=data['room'])
+
 
 @socketio.on('save_message')
 def handle_save_message_event(data):
@@ -193,7 +195,43 @@ def select_flight(flight_id):
         session[key] = {}
     cart = session.get(key)
     cart["flight_id"] = flight_id
+    session[key] = cart
     return jsonify(cart)
+
+
+@app.route('/api/cart/select-seat-<seat_id>', methods=['POST'])
+def select_seat(seat_id):
+    key = app.config['CART_KEY']
+    if key not in session or "flight_id" not in session[key]:
+        return jsonify({"status": 404})
+
+    cart = session[key]
+    data = request.json
+    if "seats" not in session[key]:
+        cart["seats"] = {}
+    price = dao.get_price(flight_id=cart["flight_id"], rank_id=str(data['rank_id']))
+    if seat_id not in cart["seats"]:
+        cart["seats"][seat_id] = {
+            "id": str(data['id']),
+            "name": str(data['name']),
+            "rank_id": data['rank_id'],
+            "rank": str(dao.get_rank(data['rank_id'])),
+            "price": price.price
+        }
+        session[key] = cart
+        return jsonify({"status": 201, "cart": session[key]})
+    else:
+        del cart["seats"][seat_id]
+        session[key] = cart
+        return jsonify({"status": 200, "cart": session[key], "seat_id": seat_id})
+
+
+@app.route('/api/cart/total')
+def total():
+    key = app.config['CART_KEY']
+    cart = session.get(key)
+    print(utils.cart_stats(cart["seats"]))
+    return jsonify(utils.cart_stats(cart["seats"]))
 
 
 @app.route('/buy-ticket/step-3')
@@ -202,14 +240,38 @@ def buy_ticket3():
     if key not in session or "flight_id" not in session[key]:
         redirect("/buy-ticket", code=404)
     cart = session.get(key)
+    if "seats" in cart:
+        del cart["seats"]
+    session[key] = cart
     flight_id = cart["flight_id"]
-    vip_seats = dao.get_seat(1)
-    seats = dao.get_seat(2)
+    vip_seats = dao.get_seat(rank_id=1)
+    seats = dao.get_seat(rank_id=2)
     for vs in vip_seats:
         vs.available = dao.is_seat_available(seat_id=vs.id, flight_id=flight_id)
     for s in seats:
         s.available = dao.is_seat_available(seat_id=s.id, flight_id=flight_id)
-    return render_template('selectseat.html', vip_seats=vip_seats, seats=seats)
+
+    vs_mtrx = []
+    i = 0
+    while True:
+        char = str(chr(65 + i))
+        col = [vs for vs in vip_seats if vs.name.startswith(char)]
+        if not col:
+            break
+        vs_mtrx.append(col)
+        i = i + 1
+
+    i = 0
+    s_mtrx = []
+    while True:
+        char = str(chr(65 + i))
+        col = [s for s in seats if s.name.startswith(char)]
+        if not col:
+            break
+        s_mtrx.append(col)
+        i = i + 1
+    return render_template('selectseat.html', vip_seats=vs_mtrx, seats=s_mtrx, vs_count=len(vs_mtrx[0]),
+                           s_count=len(s_mtrx[0]))
 
 
 if __name__ == '__main__':
