@@ -3,6 +3,7 @@
     padding: 0;
 }
 
+<<<<<<< HEAD
 @font-face {
   font-family: my-title-font;
   src: url('../fonts/Montserrat-ExtraBold.ttf');
@@ -30,18 +31,66 @@ h3{
 
 .plane{
     background-color: Gray;
+=======
+.plane{
+    background: #fff;
+    width: fit-content;
+    padding: 150px 50px 50px 50px !important;
+    border-radius: 80% 80% 0 0;
 }
 
-.seat-col{
-    display: flex;
-    flex-direction: column !important;
+.cell{
+    height: 35px;
+    width: 40px;
 }
-
 .seat{
-    background-color: #FFF;
-    height: 25px;
-    width: 25px;
-    border-top-left-radius: 7px;
-    border-top-right-radius: 7px;
-    margin: 3px;
+    background: var(--secondary-color);
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    cursor: pointer;
+    opacity: 0.7;
+>>>>>>> c61ce815d856f7a777cbc721b55ef5c516e7d961
+}
+
+.seat:hover{
+    opacity: 1;
+    background: var(--primary-color);
+}
+
+.vip-seat{
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    cursor: pointer;
+    background: #F9D976;
+}
+
+.vip-seat:hover{
+    opacity: 1;
+    background: #FFD53D;
+}
+
+.selected-seat{
+    opacity: 1;
+    background: var(--primary-color);
+}
+
+.selected-vip-seat{
+    opacity: 1;
+    background: #FFD53D;
+}
+
+.unavailable{
+    background: Gray !important;
+    cursor: not-allowed;
+}
+
+.my-back{
+    padding: 10px;
+    background: #fff;
+    height: fit-content;
+}
+
+.right-side{
+    left: 100%;
+    transform: translate(-110%,0)
 }
