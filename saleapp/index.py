@@ -211,6 +211,10 @@ def buy_ticket3():
         s.available = dao.is_seat_available(seat_id=s.id, flight_id=flight_id)
     return render_template('selectseat.html', vip_seats=vip_seats, seats=seats)
 
+@app.route('/buy-ticket/step-4')
+def buy_ticket4():
+    return render_template('buyticket4.html')
+
 
 if __name__ == '__main__':
     socketio.run(app, debug=True)
