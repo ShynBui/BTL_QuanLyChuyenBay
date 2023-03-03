@@ -1,3 +1,5 @@
+import hashlib
+
 from sqlalchemy import DECIMAL, Column, Integer, String, Float, Boolean, DateTime, ForeignKey, Text, Enum
 from sqlalchemy.orm import relationship, backref
 from saleapp import db, app
@@ -185,6 +187,16 @@ if __name__ == '__main__':
     with app.app_context():
         db.drop_all()
         db.create_all()
+
+        password = str(hashlib.md5('1'.encode('utf-8')).hexdigest())
+        u1 = User(name='An', username='u1', password=password,email=None, diachi='abc',
+                  user_role=UserRole.USER)
+        u2 = User(name='Binh', username='u2', password=password,email=None, diachi='abc',
+                  user_role=UserRole.STAFF)
+        u3 = User(name='Dong', username='u3', password=password,email=None, diachi='abc',
+                  user_role=UserRole.ADMIN)
+        db.session.add_all([u1, u2, u3])
+        db.session.commit()
 
         a1 = Airplane(name="A001")
         a2 = Airplane(name="A002")
