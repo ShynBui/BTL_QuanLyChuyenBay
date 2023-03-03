@@ -11,6 +11,7 @@
 {% block title %} Mua vé {% endblock %}
 
 {% block content %}
+{% if current_user.is_authenticated %}
 <div class="base background test bg-secondary p-5">
     <div class="container-fluid p-5">
         {% for f in flights %}
@@ -87,7 +88,9 @@
         {% endfor %}
     </div>
 </div>
-
+{% else %}
+Vui lòng đăng nhập
+{% endif %}
 {% endblock %}
 
 {% block footer %}
