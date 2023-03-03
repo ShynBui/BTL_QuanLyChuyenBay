@@ -273,9 +273,12 @@ def buy_ticket3():
     return render_template('selectseat.html', vip_seats=vs_mtrx, seats=s_mtrx, vs_count=len(vs_mtrx[0]),
                            s_count=len(s_mtrx[0]))
 
-@app.route('/buy-ticket/step-4')
-def buy_ticket4():
-    return render_template('buyticket4.html')
+@app.route("/buy-ticket/step-4")
+def cus_form():
+    key = app.config['CART_KEY']
+    seat_amount = len(session[key]["seats"])
+    seats = session[key]["seats"]
+    return render_template('fillform.html', seats=seats)
 
 
 if __name__ == '__main__':
