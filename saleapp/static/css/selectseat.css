@@ -3,56 +3,94 @@
     padding: 0;
 }
 
+<<<<<<< HEAD
+@font-face {
+  font-family: my-title-font;
+  src: url('../fonts/Montserrat-ExtraBold.ttf');
+}
+
+@font-face {
+  font-family: my-font;
+  src: url('../fonts/Montserrat-Medium.ttf');
+}
+
+:root {
+    --secondary-color: #43B0F1;
+    --primary-color: #057DCD;
+    --dark-color: #1E3D58;
+}
+
 body{
     font-size: 13px;
 }
 
+h3{
+    font-family: my-title-font;
+    color: var(--primary-color);
+}
+
 .plane{
-    background: #DCDBDA;
-    width: 20%;
-    position: relative;
+    background-color: Gray;
+=======
+.plane{
+    background: #fff;
+    width: fit-content;
+    padding: 150px 50px 50px 50px !important;
+    border-radius: 80% 80% 0 0;
 }
 
-ol{
-    list-style: none;
+.cell{
+    height: 35px;
+    width: 40px;
 }
-
-.seats{
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    justify-content: flex-wrap;
-}
-
 .seat{
-    display: flex;
-    flex: 0 0 5%;
-    padding: 5px;
-    position: relative;
+    background: var(--secondary-color);
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    cursor: pointer;
+    opacity: 0.7;
+>>>>>>> c61ce815d856f7a777cbc721b55ef5c516e7d961
 }
 
-.seat label{
-    display: block;
-    position: relative;
-    width: 30px;
-    text-align: center;
-    font-size: 1rem;
-    font-weight: bolder;
-    font-family: Tahoma;
-    border-radius: 2px;
-    background: lime;
-    line-height: 2rem;
+.seat:hover{
+    opacity: 1;
+    background: var(--primary-color);
 }
 
-.seat label:hover {
-    box-shadow: 0 0 2px 2px green;
+.vip-seat{
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    cursor: pointer;
+    background: #F9D976;
 }
 
-.seat input{
-
+.vip-seat:hover{
+    opacity: 1;
+    background: #FFD53D;
 }
-.seat input[type=checkbox]{
-    position: absolute;
-    width: 30px;
-    height: 30px;
+
+.selected-seat{
+    opacity: 1;
+    background: var(--primary-color);
+}
+
+.selected-vip-seat{
+    opacity: 1;
+    background: #FFD53D;
+}
+
+.unavailable{
+    background: Gray !important;
+    cursor: not-allowed;
+}
+
+.my-back{
+    padding: 10px;
+    background: #fff;
+    height: fit-content;
+}
+
+.right-side{
+    left: 100%;
+    transform: translate(-110%,0)
 }
