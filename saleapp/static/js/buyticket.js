@@ -129,3 +129,13 @@ function pay(){
 function getDetail(order_id) {
     window.location=`/order/${order_id}`;
 }
+
+
+function showBarCode(id) {
+    JsBarcode(`#barcode-${id}`, (id + ""), {
+      lineColor: "#057DCD",
+      width:4,
+      height:50,
+      displayValue: false
+    });
+}
