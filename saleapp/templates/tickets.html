@@ -1,0 +1,35 @@
+{% extends 'layout/base.html' %}
+{% block css %}
+<link href="{{ url_for('static', filename='css/buyticket.css') }}" rel="stylesheet"/>
+<link href="{{ url_for('static', filename='css/selectseat.css') }}" rel="stylesheet"/>
+{% endblock %}
+{% block js %}
+<script defer src="{{ url_for('static', filename='js/decorator.js') }}"></script>
+<script src="{{ url_for('static', filename='js/buyticket.js') }}"></script>
+{%endblock%}
+
+
+{% block title %}Đặt vé{% endblock %}
+
+
+{% block content %}
+<div class="background base p-5" style="min-height: 100vh">
+    {% for t in tickets %}
+    <div class="ticket my-back mb-3 rounded-3">
+        <div>
+            <span class="my-sub-text text-secondary fs-3">Mã vé: {{t.id}}</span>
+        </div>
+        <div> Tên hành khách: {{t.customer.name}}</div>
+        <div> CMND/CCCD: {{t.customer.serial}}</div>
+        <div> Máy bay: {{t.flight.airplane}}</div>
+        <div> Ghế: {{t.seat}}</div>
+        <div> Điểm khởi hành: {{t.flight.airline.departing_airport}} lúc {{t.flight.departing_at.strftime('%d/%m/%Y %H:%M')}}</div>
+        <div> Điểm đến: {{t.flight.airline.arriving_airport}} lúc {{t.flight.arriving_at.strftime('%d/%m/%Y %H:%M')}}</div>
+        <div class="text-danger fs-4"> Giá vé: {{"{:,.0f}".format(t.subTotal*1000)}} VNĐ</div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
+
+{% block footer %}
+{%endblock%}

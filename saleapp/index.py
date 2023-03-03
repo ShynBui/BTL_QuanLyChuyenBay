@@ -230,7 +230,6 @@ def select_seat(seat_id):
 def total():
     key = app.config['CART_KEY']
     cart = session.get(key)
-    print(utils.cart_stats(cart["seats"]))
     return jsonify(utils.cart_stats(cart["seats"]))
 
 
@@ -273,12 +272,45 @@ def buy_ticket3():
     return render_template('selectseat.html', vip_seats=vs_mtrx, seats=s_mtrx, vs_count=len(vs_mtrx[0]),
                            s_count=len(s_mtrx[0]))
 
+
 @app.route("/buy-ticket/step-4")
 def cus_form():
     key = app.config['CART_KEY']
-    seat_amount = len(session[key]["seats"])
     seats = session[key]["seats"]
     return render_template('fillform.html', seats=seats)
+
+
+@app.route("/api/cart/pay", methods=['POST'])
+def pay():
+    data = request.json
+    key = app.config['CART_KEY']
+    cart = session.get(key)
+    for s in cart["seats"]:
+        cart["seats"][s]['customer'] = data['data'][s]
+    total_price = utils.cart_stats(cart["seats"])['total_price']
+    dao.save_order(cart=cart, total_price=total_price)
+    return jsonify()
+
+
+@app.route("/orders")
+def get_orders():
+    id = current_user.id
+    ords = dao.get_order(user_id=id)
+    for o in ords:
+        for t in o.tickets:
+            o.flight = t.flight
+            break
+
+    return render_template('orders.html', orders=ords)
+
+
+@app.route('/order/<order_id>')
+def detail_order(order_id):
+
+    id = current_user.id
+
+    ords = dao.get_order(user_id=id, order_id=order_id)
+    return render_template('tickets.html', tickets=ords.tickets)
 
 
 if __name__ == '__main__':

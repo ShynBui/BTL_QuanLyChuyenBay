@@ -11,10 +11,9 @@
             <li class="nav-item active">
                 <a class="nav-link" href="{{url_for('home')}}">Trang chủ <span class="sr-only"></span></a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{{url_for('buy_ticket')}}">Mua vé</a>
-            </li>
+
             {%if current_user.is_authenticated %}
+
             <li class="nav-item">
                 <a class="nav-link" href="{{url_for('user_signout')}}" >
                     {%if current_user.avatar %}
@@ -25,7 +24,12 @@
                     {{current_user.username}}
                 </a>
             </li>
-
+            <li class="nav-item">
+                <a class="nav-link" href="{{url_for('buy_ticket')}}">Mua vé</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{url_for('get_orders')}}">Xem các đơn đã mua</a>
+            </li>
             <li class="nav-item">
                 <a class="nav-link" href="{{url_for('user_signout')}}">Dăng xuất</a>
             </li>

@@ -66,7 +66,7 @@ function selectSeat(obj, seatID, seatName, seatRankId) {
             alert("Đã có lỗi xảy ra")
             window.location="/buy-ticket";
         }
-    }).then(update => total())
+    }).then(updgoToStep4ate => total())
 }
 
 function total() {
@@ -86,4 +86,46 @@ function goToStep4(){
         window.location="/buy-ticket/step-4";
     else
         alert("Bạn chưa chọn ghế")
+}
+
+function pay(){
+    cusForm = document.querySelector("form")
+    if (cusForm.checkValidity()) {
+        let data = {}
+        cus = document.querySelectorAll(".customers-info")
+        for (let i = 0; i < cus.length; i++) {
+            let name = cus[i].querySelector(`#name-${cus[i].id}`).value
+            let gender = cus[i].querySelector(`#gender-${cus[i].id}`).value
+            let dob = cus[i].querySelector(`#dob-${cus[i].id}`).value
+            let serial = cus[i].querySelector(`#serial-${cus[i].id}`).value
+            let email = cus[i].querySelector(`#email-${cus[i].id}`).value
+            let phone = cus[i].querySelector(`#phone-${cus[i].id}`).value
+            data[cus[i].id] = {
+                "name": name,
+                "gender": gender,
+                "dob": dob,
+                "serial": serial,
+                "email": email,
+                "phone": phone
+            }
+        }
+        fetch('/api/cart/pay', {
+            method: "post",
+            body: JSON.stringify({
+                data
+            }),
+            headers: {
+                "Content-Type": "application/json"
+            }
+        }).then(res => res.json()).then((data) => {
+            window.location="/orders"
+        })
+    }
+    else
+        alert("Vui lòng điền đầy đủ thông tin")
+}
+
+
+function getDetail(order_id) {
+    window.location=`/order/${order_id}`;
 }

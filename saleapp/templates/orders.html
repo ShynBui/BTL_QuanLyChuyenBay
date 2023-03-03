@@ -1,0 +1,45 @@
+{% extends 'layout/base.html' %}
+{% block css %}
+<link href="{{ url_for('static', filename='css/buyticket.css') }}" rel="stylesheet"/>
+<link href="{{ url_for('static', filename='css/selectseat.css') }}" rel="stylesheet"/>
+{% endblock %}
+{% block js %}
+<script defer src="{{ url_for('static', filename='js/decorator.js') }}"></script>
+<script src="{{ url_for('static', filename='js/buyticket.js') }}"></script>
+{%endblock%}
+
+
+{% block title %}Đặt vé{% endblock %}
+
+
+{% block content %}
+<div class="background base p-5" style="min-height: 100vh">
+    {% for o in orders %}
+    <div class="order my-back mb-3 rounded-3">
+        <div>
+            <span class="my-sub-text text-secondary">Mã đơn: {{o.id}}</span>
+        </div>
+        <div> Ngày mua: {{o.orderDate}}</div>
+        <div> Chuyến đi: {{o.flight}}</div>
+        <div>
+            Các ghế đã đặt: <span>
+            {% for t in o.tickets %}
+                {{t.seat}}
+            {% endfor %}
+        </span>
+        </div>
+        <div> Tổng tiền: {{"{:,.0f}".format(o.total*1000)}} VNĐ</div>
+        <div class="d-flex">
+            <div class="ms-auto"></div>
+            <button onclick="getDetail({{o.id}})" type="button" class="my-btn rounded-3 px-3 py-2 my-2">Xem thông tin
+                vé
+            </button>
+        </div>
+
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
+
+{% block footer %}
+{%endblock%}

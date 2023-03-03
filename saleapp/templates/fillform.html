@@ -9,45 +9,45 @@
 
 {% block content %}
 <div class="background base py-5 px-5">
-    <div>
+    <form>
         <div class="d-flex col-6 ">
             <div class="w-100">
                 {% for s in seats %}
-                <form id="{{s}}" action="buy-ticket" class="w-100 p-4 rounded-3 my-back mb-5">
+                <div id="{{s}}" action="buy-ticket" class="w-100 p-4 rounded-3 my-back mb-5 customers-info">
                     <h5>Ghế {{seats[s]["name"]}}</h5>
                     <div>Thông tin cơ bản</div>
+                    <div class="form-floating mt-3 mb-3">
+                        <input required id="name-{{s}}" name="name" type="text" class="text-dark form-control shadow-none">
+                        <label for="name-{{s}}">Họ tên khách hàng</label>
+                    </div>
                     <div class="form-floating my-2 d-flex">
                         <select required class="text-dark form-select shadow-none" name="gender"
-                                aria-label="Floating label select example" id="gender">
+                                aria-label="Floating label select example" id="gender-{{s}}">
                             <option value="" selected></option>
                             <option value="Male">Nam</option>
                             <option value="Female">Nữ</option>
                         </select>
-                        <label for="gender">Giới tính</label>
-                    </div>
-                    <div class="form-floating mt-3 mb-3">
-                        <input required id="name" name="name" type="text" class="text-dark form-control shadow-none">
-                        <label for="name">Họ tên khách hàng</label>
+                        <label for="gender-{{s}}">Giới tính</label>
                     </div>
                     <div class="form-floating mb-3 mt-3">
-                        <input required type="date" class="text-dark form-control shadow-none" id="dob" name="dob">
-                        <label for="dob">Ngày sinh</label>
+                        <input required type="date" class="text-dark form-control shadow-none" id="dob-{{s}}" name="dob">
+                        <label for="dob-{{s}}">Ngày sinh</label>
                     </div>
                     <div class="form-floating mt-3 mb-3">
-                        <input required id="serial" name="serial" type="text"
+                        <input required id="serial-{{s}}" name="serial" type="text"
                                class="text-dark form-control shadow-none">
-                        <label for="serial">Số CMND/CCCD</label>
+                        <label for="serial-{{s}}">Số CMND/CCCD</label>
                     </div>
                     <div>Thông tin liên lạc</div>
                     <div class="form-floating mb-3 mt-3">
-                        <input required type="email" class="text-dark form-control shadow-none" id="email" name="email">
-                        <label for="email">Email</label>
+                        <input required type="email" class="text-dark form-control shadow-none" id="email-{{s}}" name="email">
+                        <label for="email-{{s}}">Email</label>
                     </div>
                     <div class="form-floating mb-3 mt-3">
-                        <input required type="tel" class="text-dark form-control shadow-none" id="phone" name="phone">
-                        <label for="phone">Số điện thoại</label>
+                        <input required type="tel" class="text-dark form-control shadow-none" id="phone-{{s}}" name="phone">
+                        <label for="phone-{{s}}">Số điện thoại</label>
                     </div>
-                </form>
+                </div>
                 {% endfor %}
             </div>
         </div>
@@ -72,12 +72,12 @@
                 </div>
             </div>
             <div class="my-back d-flex fs-5 align-items-center" style="border-radius: 0 0 6px 6px;">
-                <div>Tổng tiền:</div>
+                <div>Tổng tiền: </div>
                 <div class="ps-2" id="total-price"></div>
-                <button type="submit" onclick="" class="my-btn ms-auto rounded-3 p-2">Thanh toán</button>
+                <button type="button" onclick="pay()" class="my-btn ms-auto rounded-3 p-2">Thanh toán</button>
             </div>
         </div>
-    </div>
+    </form>
 </div>
 <script>total()</script>
 {% endblock %}
