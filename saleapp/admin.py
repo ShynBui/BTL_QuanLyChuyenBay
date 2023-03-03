@@ -77,6 +77,6 @@ class FlightManagementView(AuthenticatedModelView):
         'arriving_at': 'Thời gian đến'
     }
 
-admin.add_view(LogoutView(name='Logout'))
 admin.add_view(FlightManagementView(Flight, db.session, name='Quản lý chuyến bay', endpoint='flights'))
 admin.add_view(ChatAdmin(name='ChatAdmin'))
+admin.add_view(LogoutView(name='Logout'))

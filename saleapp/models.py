@@ -35,7 +35,7 @@ class User(BaseModel, UserMixin):
     message = relationship('Message', backref='user', lazy=True)
 
     def __str__(self):
-        return self.name
+        return str(self.name)
 
 
 class Customer(BaseModel):
@@ -48,16 +48,16 @@ class Customer(BaseModel):
     tickets = relationship('PlaneTicket', backref='customer', lazy=True)
 
     def __str__(self):
-        return self.name
+        return str(self.name)
 
 
 class Airplane(BaseModel):
     name = Column(String(50), nullable=False, unique=True)
     image = Column(String(100))
-    flights = relationship('Flight', backref='airplane', lazy=True)
+    flights = relationship('Flight', backref='airplane', lazy=True, passive_deletes=True, cascade="all, delete")
 
     def __str__(self):
-        return self.name
+        return str(self.name)
 
 
 class Airport(BaseModel):
@@ -72,7 +72,7 @@ class Airport(BaseModel):
                                     backref="arriving_airport", lazy=True)
 
     def __str__(self):
-        return self.name
+        return str(self.name)
 
 
 class Rank(BaseModel):
@@ -81,7 +81,7 @@ class Rank(BaseModel):
     prices = relationship('PriceOfFlight', backref='rank', lazy=True)
 
     def __str__(self):
-        return self.name
+        return str(self.name)
 
 
 class Seat(BaseModel):
@@ -91,7 +91,7 @@ class Seat(BaseModel):
     tickets = relationship('PlaneTicket', backref='seat', lazy=True)
 
     def __str__(self):
-        return self.name
+        return str(self.name)
 
 
 class PurchaseOrder(BaseModel):
@@ -101,16 +101,16 @@ class PurchaseOrder(BaseModel):
     user_id = Column(Integer, ForeignKey(User.id), nullable=False)
 
     def __str__(self):
-        return self.id
+        return str(self.id)
 
 
 class Airline(BaseModel):
     departing_airport_id = Column(Integer, ForeignKey(Airport.id), nullable=False)
     arriving_airport_id = Column(Integer, ForeignKey(Airport.id), nullable=False)
-    flights = relationship('Flight', backref='airline', lazy=True)
+    flights = relationship('Flight', backref='airline', lazy=True, passive_deletes=True, cascade="all, delete")
 
     def __str__(self):
-        return f'{self.departing_airport.name} {self.arriving_airport.name}'
+        return str(f'{self.departing_airport.name} - {self.arriving_airport.name}')
 
 
 class Flight(BaseModel):
@@ -118,32 +118,32 @@ class Flight(BaseModel):
     arriving_at = Column(DateTime, nullable=False)
     airplane_id = Column(Integer, ForeignKey(Airplane.id), nullable=False)
     airline_id = Column(Integer, ForeignKey(Airline.id), nullable=False)
-    airportMediums = relationship('Flight_AirportMedium', backref='flight', lazy=True)
-    tickets = relationship('PlaneTicket', backref='flight', lazy=True)
-    prices = relationship('PriceOfFlight', backref='flight', lazy=True)
+    airportMediums = relationship('Flight_AirportMedium', backref='flight', lazy=True, passive_deletes=True, cascade="all, delete")
+    tickets = relationship('PlaneTicket', backref='flight', lazy=True, passive_deletes=True, cascade="all, delete")
+    prices = relationship('PriceOfFlight', backref='flight', lazy=True, passive_deletes=True, cascade="all, delete")
 
     def __str__(self):
-        return f'từ {self.airline.departing_airport.name} đến {self.airline.arriving_airport.name}'
+        return str(f'từ {self.airline.departing_airport.name} đến {self.airline.arriving_airport.name}')
 
 
 class PriceOfFlight(BaseModel):
     rank_id = Column(Integer, ForeignKey(Rank.id), nullable=False)
-    flight_id = Column(Integer, ForeignKey(Flight.id), nullable=False)
+    flight_id = Column(Integer, ForeignKey(Flight.id, ondelete="CASCADE", onupdate="cascade"), nullable=False)
     price = Column(Float, nullable=False)
 
     def __str__(self):
-        return self.price
+        return str(self.price)
 
 
 class Flight_AirportMedium(BaseModel):
     stop_time_begin = Column(DateTime, nullable=False)
     stop_time_finish = Column(DateTime, nullable=False)
     description = Column(Text)
-    airport_id = Column(Integer, ForeignKey(Airport.id), nullable=False)
-    flight_id = Column(Integer, ForeignKey(Flight.id), nullable=False)
+    airport_id = Column(Integer, ForeignKey(Airport.id, ondelete="CASCADE", onupdate="cascade"), nullable=False)
+    flight_id = Column(Integer, ForeignKey(Flight.id, ondelete="CASCADE", onupdate="cascade"), nullable=False)
 
     def __str__(self):
-        return self.airport.name
+        return str(self.airport.name)
 
 
 class PlaneTicket(BaseModel):
@@ -151,10 +151,10 @@ class PlaneTicket(BaseModel):
     seat_id = Column(Integer, ForeignKey(Seat.id), nullable=False)
     customer_id = Column(Integer, ForeignKey(Customer.id), nullable=False)
     order_id = Column(Integer, ForeignKey(PurchaseOrder.id), nullable=False)
-    flight_id = Column(Integer, ForeignKey(Flight.id), nullable=False)
+    flight_id = Column(Integer, ForeignKey(Flight.id, ondelete="CASCADE", onupdate="cascade"), nullable=False)
 
     def __str__(self):
-        return self.id
+        return str(self.id)
 
 
 class Room(db.Model):
@@ -167,7 +167,7 @@ class Room(db.Model):
     message = relationship('Message', backref='room', lazy=True)
 
     def __str__(self):
-        return self.name
+        return str(self.name)
 
 class Message(db.Model):
     __tablename__ = 'message'
@@ -180,7 +180,7 @@ class Message(db.Model):
     date = Column(DateTime, default= datetime.now())
 
     def __str__(self):
-        return self.content
+        return str(self.content)
 
 
 if __name__ == '__main__':
