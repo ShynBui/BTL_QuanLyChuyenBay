@@ -35,10 +35,10 @@
                     </div>
                 </div>
                 <div class="col-3">
-                    <button class="p-3 button my-btn w-100 h-100 text-start d-flex align-items-center justify-content-between">
+                    <button type="button" onclick="selectFlight({{f.id}})" class="p-3 button my-btn w-100 h-100 text-start d-flex align-items-center justify-content-between">
                         <div>
-                            <div class="text-dark fs-6">Giá từ</div>
-                            <div class="text-dark fs-5">{{"{:,.0f}".format(f.prices[1].price*1000)}} VNĐ</div>
+                            <div class="fs-6">Giá từ</div>
+                            <div class="fs-5">{{"{:,.0f}".format(f.prices[1].price*1000)}} VNĐ</div>
                         </div>
                         <div>
                             <i class="fs-4 fa-solid fa-caret-right"></i>

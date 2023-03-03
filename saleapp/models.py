@@ -75,7 +75,7 @@ class Airport(BaseModel):
 
 class Rank(BaseModel):
     name = Column(String(25), nullable=False)
-    seats = relationship('Seat', backref='seat', lazy=True)
+    seats = relationship('Seat', backref='rank', lazy=True)
     prices = relationship('PriceOfFlight', backref='rank', lazy=True)
 
     def __str__(self):
@@ -84,7 +84,7 @@ class Rank(BaseModel):
 
 class Seat(BaseModel):
     name = Column(String(3), nullable=False)
-    available = Column(Boolean, nullable=False, default=True)
+    status = Column(Boolean, nullable=False, default=True)
     rank_id = Column(Integer, ForeignKey(Rank.id), nullable=False)
     tickets = relationship('PlaneTicket', backref='seat', lazy=True)
 
@@ -206,23 +206,24 @@ if __name__ == '__main__':
 
         # Khởi tạo ghế thương gia
         for i in range(4):
-            col = chr(65 + i)
             for j in range(4):
-                name = str(col) + "0" + str(j+1)
+                col = chr(65 + j)
+                name = str(col) + "0" + str(i+1)
                 s = Seat(name=name, rank_id=1)
                 db.session.add(s)
 
         # Khởi tạo ghế phổ thông
-        for i in range(4):
-            col = chr(65 + i)
-            for j in range(4, 14):
-                if j < 9:
-                    row = "0" + str(j+1)
+        for i in range(4, 14):
+            for j in range(4):
+                col = chr(65 + j)
+                if i < 9:
+                    row = "0" + str(i+1)
                 else:
-                    row = str(j+1)
+                    row = str(i+1)
                 name = str(col) + row
                 s = Seat(name=name, rank_id=2)
                 db.session.add(s)
+
 
         # Khởi tạo airline
         for i in range(len(ap)):

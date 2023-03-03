@@ -97,6 +97,10 @@ a{
     border: 0;
 }
 
+.my-btn:hover{
+    background: var(--primary-color);
+    color: #fff !important;
+}
 input:focus{
     box-shadow:0 0 0 0px red;
     background: transparent;
