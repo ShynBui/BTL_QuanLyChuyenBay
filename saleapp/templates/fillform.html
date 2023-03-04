@@ -8,6 +8,7 @@
 {% block title %}Nhập thông tin{% endblock %}
 
 {% block content %}
+{% if current_user.is_authenticated %}
 <div class="background base py-5 px-5">
     <form>
         <div class="d-flex col-6 ">
@@ -80,7 +81,9 @@
     </form>
 </div>
 <script>total()</script>
+{% else %}
+Vui lòng đăng nhập
+{% endif %}
 {% endblock %}
-
 {% block footer %}
 {%endblock%}

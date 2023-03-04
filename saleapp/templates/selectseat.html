@@ -7,6 +7,7 @@
 
 {% block title %}Chọn chỗ ngồi{% endblock %}
 {% block content %}
+{% if current_user.is_authenticated %}
 <div class="d-flex bg-secondary base p-5 fs-5">
     <div class="plane p-3">
         <div class="d-flex text-center">
@@ -112,8 +113,9 @@
             <button type="submit" onclick="goToStep4()" class="my-btn ms-auto rounded-3 p-2">Tiếp tục</button>
     </div>
 </div>
-
-
+{% else %}
+Vui lòng đăng nhập
+{% endif %}
 {% endblock %}
 
 {% block footer %}

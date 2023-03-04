@@ -33,6 +33,7 @@ class User(BaseModel, UserMixin):
     diachi = Column(String(100), nullable=False)
     user_role = Column(Enum(UserRole), default=UserRole.USER)
     message = relationship('Message', backref='user', lazy=True)
+    orders = relationship('PurchaseOrder', backref='user', lazy=True)
 
     def __str__(self):
         return str(self.name)

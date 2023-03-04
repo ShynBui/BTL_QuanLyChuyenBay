@@ -118,7 +118,7 @@ function pay(){
                 "Content-Type": "application/json"
             }
         }).then(res => res.json()).then((data) => {
-            window.location="/orders"
+            window.location=`/order/${data["order_id"]}`
         })
     }
     else
