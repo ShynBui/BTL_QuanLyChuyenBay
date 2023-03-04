@@ -289,7 +289,10 @@ def pay():
         cart["seats"][s]['customer'] = data['data'][s]
     total_price = utils.cart_stats(cart["seats"])['total_price']
     dao.save_order(cart=cart, total_price=total_price)
-    return jsonify()
+    o = dao.get_newest_order(user_id=current_user.id)
+
+    del session[key]
+    return jsonify({"order_id": o.id})
 
 
 @app.route("/orders")

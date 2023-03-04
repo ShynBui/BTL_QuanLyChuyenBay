@@ -91,6 +91,11 @@ def get_order(user_id, order_id=None):
         return ords.first()
     return ords.all()
 
+
+def get_newest_order(user_id):
+    ords = PurchaseOrder.query.filter(PurchaseOrder.user_id.__eq__(user_id)) \
+        .order_by(PurchaseOrder.orderDate.desc())
+    return ords.first()
 # def get_order(user_id)
 # if __name__ == '__main__':
 #     with app.app_context():
