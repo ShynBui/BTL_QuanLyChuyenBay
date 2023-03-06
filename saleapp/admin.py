@@ -1,3 +1,4 @@
+from decimal import Decimal
 from gettext import gettext
 
 import cloudinary.uploader
@@ -8,7 +9,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, DateTimeLocalField, SelectField
 from wtforms.validators import InputRequired, Length
 
-from saleapp.models import UserRole, Flight_AirportMedium, Flight, Airplane, Airline
+from saleapp.models import UserRole, Flight_AirportMedium, Flight, PriceOfFlight, PlaneTicket
 from saleapp import app, db, untils
 from flask_admin import Admin, BaseView, expose, AdminIndexView
 from flask_admin.contrib.sqla import ModelView
@@ -47,13 +48,21 @@ class ChatAdmin(BaseView):
 class MyAdminIndex(AdminIndexView):
     @expose('/')
     def index(self):
-        return self.render('admin/index.html')
+        total = Decimal(0)
+        airline_name = request.args.get('airline_name')
+        date = request.args.get('month')
+        statistics = untils.statistic_revenue_follow_month(airline_name=airline_name,
+                                                          date=date)
+        for s in statistics:
+            if s[1]:
+                total = total + s[1]
+        return self.render('admin/index.html',statistics=statistics, total=total)
 
 
 admin = Admin(app=app, name='QUẢN TRỊ MÁY BAY', template_mode='bootstrap4',
               index_view=MyAdminIndex())
 
-class FlightManagementView(AuthenticatedModelView):
+class ModelView(AuthenticatedModelView):
     column_display_pk = True
     can_view_details = True
     can_export = True
@@ -61,6 +70,16 @@ class FlightManagementView(AuthenticatedModelView):
     page_size = 10
     column_filters = ['id']
     column_searchable_list = ['id']
+
+class FlightManagementView(ModelView):
+    column_display_pk = True
+    can_view_details = True
+    can_export = True
+    # edit_modal = True
+    page_size = 10
+    column_filters = ['id']
+    column_searchable_list = ['id']
+    form_excluded_columns = ['airportMediums', 'tickets', 'prices']
     column_labels = {
         'id': 'Mã chuyến bay',
         'departing_at': 'Thời gian khởi hành',
@@ -95,14 +114,7 @@ class FlightManagementView(AuthenticatedModelView):
                            apm_list=apm_list,
                            return_url=return_url)
 
-class Flight_Airportedium_View(AuthenticatedModelView):
-    column_display_pk = True
-    can_view_details = True
-    can_export = True
-    # edit_modal = True
-    page_size = 10
-    column_filters = ['id']
-    column_searchable_list = ['id']
+class Flight_Airportedium_View(ModelView):
     column_labels = {
         'id': 'Mã trạm dừng',
         'stop_time_begin': 'Thời gian bắt đầu dừng',
@@ -110,7 +122,21 @@ class Flight_Airportedium_View(AuthenticatedModelView):
         'description': 'Mô tả'
     }
 
+class PriceView(ModelView):
+    column_labels = {
+        'id': 'Mã giá',
+        'price': 'Giá'
+    }
+
+class TicketView(ModelView):
+    column_labels = {
+        'id': 'Mã vé',
+        'subTotal': 'Tổng tiền'
+    }
+
 admin.add_view(FlightManagementView(Flight, db.session, name='Quản lý chuyến bay', endpoint='flights'))
 admin.add_view(Flight_Airportedium_View(Flight_AirportMedium, db.session, name='Trạm dừng', endpoint='stops'))
+admin.add_view(PriceView(PriceOfFlight, db.session, name='Quản lý giá', endpoint='prices'))
+admin.add_view(TicketView(PlaneTicket, db.session, name='Quản lý vé', endpoint='tickets'))
 admin.add_view(ChatAdmin(name='ChatAdmin'))
 admin.add_view(LogoutView(name='Logout'))
