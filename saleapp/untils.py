@@ -1,4 +1,4 @@
-from saleapp.models import User, UserRole, Room, Message
+from saleapp.models import User, UserRole, Room, Message, Airport, Flight, PriceOfFlight, Airline
 from flask_login import current_user
 from sqlalchemy import func, and_, desc
 from saleapp import app, db
@@ -96,3 +96,12 @@ def get_unreply_room():
 
 def get_user_by_id(user_id):
     return User.query.get(user_id)
+
+def load_airports():
+    return Airport.query.all()
+
+def load_flights():
+    return Flight.query.all()
+
+def get_prices_of_flight(flight_id):
+    return PriceOfFlight.query.filter(PriceOfFlight.flight_id.__eq__(flight_id)).all()

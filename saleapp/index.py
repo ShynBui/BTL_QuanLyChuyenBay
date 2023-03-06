@@ -1,5 +1,6 @@
 import math
-import datetime
+import time
+from datetime import datetime
 from flask import render_template, request, redirect, session, jsonify, url_for
 from saleapp import app, admin, login, untils, socketio, dao, utils
 from saleapp.models import UserRole
@@ -8,9 +9,24 @@ import cloudinary.uploader
 from flask_socketio import SocketIO, emit, join_room
 
 
-@app.route("/")
+@app.route("/", methods=('GET', 'POST'))
 def home():
-    return render_template('index.html')
+    flights = untils.load_flights()
+    data_fill = flights
+    len_of_flights = len(data_fill)
+    if request.method == "POST":
+        data_fill = []
+        start = request.form['start']
+        finish = request.form['finish']
+        date = request.form['date']
+        date = datetime.strptime(date, "%Y-%m-%d").date()
+        for f in flights:
+            f_d = f.departing_at.date()
+            if f.airline.departing_airport.name == start and f.airline.arriving_airport.name == finish\
+                    and f_d == date:
+                data_fill.append(f)
+        len_of_flights = len(data_fill)
+    return render_template('index.html', data_fill=data_fill, len_of_flights=len_of_flights)
 
 
 # socket
@@ -279,6 +295,33 @@ def cus_form():
     seat_amount = len(session[key]["seats"])
     seats = session[key]["seats"]
     return render_template('fillform.html', seats=seats)
+
+@app.route("/api/index/")
+def airports():
+    data = []
+
+    for a in untils.load_airports():
+        data.append({
+            'id': a.id,
+            'name': a.name
+        })
+
+    return jsonify(data)
+
+@app.route("/api/index/price/")
+def prices():
+    data = []
+
+    for f in untils.load_flights():
+        p = untils.get_prices_of_flight(f.id)
+        for pr in p:
+            data.append({
+                'flight_id': pr.flight_id,
+                'rank': pr.rank.name,
+                'price': pr.price
+            })
+
+    return jsonify(data)
 
 
 if __name__ == '__main__':

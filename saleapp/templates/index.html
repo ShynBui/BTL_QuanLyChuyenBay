@@ -4,7 +4,79 @@
 
 
 {% block content %}
+<section class="row" style="margin: 2% 0;">
+    <h1 class="text-center text-info">TÌM CHUYẾN BAY</h1>
+    <form method="POST" class=" row g-3 needs-validation border" validate style="margin: 2% 0; padding: 2% 4%;">
+        <div class="col-md-4">
+            <label for="validationCustom01" class="form-label">Nơi đi:</label>
+            <select class="form-select" name="start" id="validationCustom01" required></select>
+        </div>
+        <div class="col-md-4">
+            <label for="validationCustom02" class="form-label">Nơi đến:</label>
+            <select class="form-select" name="finish" id="validationCustom02" required></select>
+        </div>
+        <div class="col-md-4">
+            <label for="validationCustom03" class="form-label">Ngày đi:</label>
+            <input type="date" class="form-control" id="validationCustom03"
+                   name="date" value="">
+        </div>
+
+        <div class="col-12">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="invalidCheck">
+                <label class="form-check-label" for="invalidCheck">
+                    Hạng thương gia
+                </label>
+                <div class="invalid-feedback">
+                    You must agree before submitting.
+                </div>
+            </div>
+        </div>
+        <div class="col-12">
+            <button class="btn btn-primary" type="submit">Tìm</button>
+        </div>
+    </form>
+</section>
+
+<section class="row" style="margin: 2% 0;">
+    <h1 class="text-center text-info">CHUYẾN BAY MỚI NHẤT</h1>
+    <div class="mx-auto row">
+        {% for f in range(len_of_flights) %}
+        <div class="card text-dark bg-light mb-3" style="max-width: 24rem; margin-left: 1%;">
+            <div class="card-header"><b>Từ:</b> {{ data_fill[f].airline.departing_airport.name}}</div>
+            <div class="card-header"><b>Đến:</b> {{ data_fill[f].airline.arriving_airport.name}}</div>
+            <div class="card-body">
+                <h5 class="card-title h5 text-primary">{{ data_fill[f].id }}</h5>
+                <p class="card-text"><b><i>Thời gian khởi hành:</i></b> {{data_fill[f].departing_at}}</p>
+                <p class="card-text"><b><i>Giá vé:</i></b> {{data_fill[f].prices.price}}
+                    <span id="p-{{f}}"></span>
+                </p>
+            </div>
+            <div class="col-12">
+                <a class="btn btn-danger" style="margin-bottom: 5%; color: white;">Mua</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+</div>
+
 
 {% endblock %}
 
+{% block js %}
+<script src="{{ url_for('static', filename='js/fillValues.js') }}"></script>
+<script>
+    window.addEventListener("load", (event) => {
+        create_options();
+        getCurrentDate();
+
+        let flight_id = document.getElementsByClassName("h5");
+        for(let i = 0; i < flight_id.length; i++) {
+            create_prices(flight_id[i].textContent);
+        }
+    });
+
+</script>
+{% endblock %}
 
