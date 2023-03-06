@@ -1,5 +1,4 @@
 import math
-import time
 from datetime import datetime
 from flask import render_template, request, redirect, session, jsonify, url_for
 from saleapp import app, admin, login, untils, socketio, dao, utils
@@ -24,7 +23,13 @@ def home():
             f_d = f.departing_at.date()
             if f.airline.departing_airport.name == start and f.airline.arriving_airport.name == finish\
                     and f_d == date:
-                data_fill.append(f)
+                if 'vip' in request.form:
+                    p = untils.get_prices_of_flight(f.id)
+                    for pr in p:
+                        if pr.rank.name == 'Thương gia':
+                            data_fill.append(f)
+                else:
+                    data_fill.append(f)
         len_of_flights = len(data_fill)
     return render_template('index.html', data_fill=data_fill, len_of_flights=len_of_flights)
 

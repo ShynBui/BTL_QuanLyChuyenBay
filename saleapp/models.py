@@ -262,6 +262,8 @@ if __name__ == '__main__':
         p32 = PriceOfFlight(rank_id=2, flight=f3, price="2600")
         fa31 = Flight_AirportMedium(stop_time_begin="2023-03-03 13:35", stop_time_finish="2023-03-03 18:45",
                                     airport_id=3, flight=f3)
+        fa32 = Flight_AirportMedium(stop_time_begin="2023-03-03 13:35", stop_time_finish="2023-03-03 18:45",
+                                    airport_id=3, flight=f3)
         db.session.add_all([f3, p31, p32, fa31])
 
         db.session.commit()
