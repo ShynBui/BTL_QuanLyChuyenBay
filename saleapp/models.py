@@ -26,7 +26,7 @@ class User(BaseModel, UserMixin):
     name = Column(String(50), nullable=False)
     username = Column(String(50), nullable=False, unique=True)
     password = Column(String(50), nullable=False)
-    avatar = Column(String(100), default='https://image.thanhnien.vn/1200x630/Uploaded/2022/xdrkxrvekx/2015_11_18/anonymous-image_fgnd.jpg')
+    avatar = Column(String(100), default='https://as1.ftcdn.net/v2/jpg/03/46/83/96/1000_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg')
     email = Column(String(50))
     active = Column(Boolean, default=True)
     joined_date = Column(DateTime, default=datetime.now())
@@ -108,7 +108,8 @@ class PurchaseOrder(BaseModel):
 class Airline(BaseModel):
     departing_airport_id = Column(Integer, ForeignKey(Airport.id), nullable=False)
     arriving_airport_id = Column(Integer, ForeignKey(Airport.id), nullable=False)
-    flights = relationship('Flight', backref='airline', lazy=True, passive_deletes=True, cascade="all, delete")
+    flights = relationship('Flight', primaryjoin="Flight.airline_id==Airline.id"
+                           , backref='airline', lazy=True, passive_deletes=True, cascade="all, delete")
 
     def __str__(self):
         return str(f'{self.departing_airport.name} - {self.arriving_airport.name}')
@@ -246,7 +247,7 @@ if __name__ == '__main__':
                     db.session.add(al)
 
         # Khởi tạo flight
-        f1 = Flight(departing_at="2023-03-03 05:00", arriving_at="2023-03-03 07:15", airplane_id=1, airline_id=4)
+        f1 = Flight(departing_at="2023-03-03 05:00", arriving_at="2023-03-03 07:15", airplane_id=1, airline_id=2)
         p11 = PriceOfFlight(rank_id=1, flight=f1, price="6000")
         p12 = PriceOfFlight(rank_id=2, flight=f1, price="1900")
         db.session.add_all([f1, p11, p12])
