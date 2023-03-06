@@ -1,4 +1,6 @@
-from saleapp.models import User, UserRole, Room, Message, Airport, Flight, PriceOfFlight, Airline
+from datetime import datetime
+
+from saleapp.models import User, UserRole, Room, Message, Airport, Flight, PriceOfFlight, Airline, PlaneTicket
 from flask_login import current_user
 from sqlalchemy import func, and_, desc
 from saleapp import app, db
@@ -105,3 +107,17 @@ def load_flights():
 
 def get_prices_of_flight(flight_id):
     return PriceOfFlight.query.filter(PriceOfFlight.flight_id.__eq__(flight_id)).all()
+
+def statistic_revenue_follow_month(airline_name=None, date=None):
+    stats = db.session.query(Airline.id, func.sum(PlaneTicket.subTotal), func.count(Flight.id.distinct())) \
+        .join(Flight, Flight.airline_id.__eq__(Airline.id), isouter=True) \
+        .join(PlaneTicket, PlaneTicket.flight_id.__eq__(Flight.id), isouter=True) \
+        .group_by(Airline.id)
+
+    if airline_name and date:
+        date = datetime.strptime(date, "%Y-%m")
+        stats = stats.filter(Airline.departing_airport_id.contains(airline_name))
+        stats = stats.filter(extract('year', PlaneTicket.date) == date.year,
+                             extract('month', PlaneTicket.date) == date.month)
+
+    return stats.all()
