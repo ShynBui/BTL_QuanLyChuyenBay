@@ -1,6 +1,7 @@
 from gettext import gettext
 
 import cloudinary.uploader
+from flask_admin.form import FormOpts
 from flask_admin.helpers import get_redirect_target
 from flask_admin.model.helpers import get_mdict_item_or_list
 from flask_wtf import FlaskForm
@@ -52,17 +53,6 @@ class MyAdminIndex(AdminIndexView):
 admin = Admin(app=app, name='QUẢN TRỊ MÁY BAY', template_mode='bootstrap4',
               index_view=MyAdminIndex())
 
-
-class FlightForm(FlaskForm):
-    id = StringField(name="id", validators=[InputRequired(), Length(max=10)])
-    name = StringField(name="name", validators=[InputRequired(), Length(max=50)])
-    departing_at = DateTimeLocalField(name="departing_at", format="%Y-%m-%dT%H:%M",
-                                      validators=[InputRequired()])
-    arriving_at = DateTimeLocalField(name="arriving_at", format="%Y-%m-%dT%H:%M",
-                                     validators=[InputRequired()])
-    planes = SelectField('planes', choices=[])
-    airlines = SelectField('airlines', choices=[])
-
 class FlightManagementView(AuthenticatedModelView):
     column_display_pk = True
     can_view_details = True
@@ -77,6 +67,50 @@ class FlightManagementView(AuthenticatedModelView):
         'arriving_at': 'Thời gian đến'
     }
 
+    @expose('/details/')
+    def details_view(self):
+        return_url = get_redirect_target() or self.get_url('.index_view')
+
+        if not self.can_view_details:
+            return redirect(return_url)
+
+        id = get_mdict_item_or_list(request.args, 'id')
+        if id is None:
+            return redirect(return_url)
+
+        model = self.get_one(id)
+
+        if model is None:
+            flash(gettext('Record does not exist.'), 'error')
+            return redirect(return_url)
+
+        apm_list = Flight_AirportMedium.query.filter(
+            Flight_AirportMedium.flight_id.__eq__(id)
+        ).all()
+
+        return self.render("admin/flight-details.html",
+                           model=model,
+                           details_columns=self._details_columns,
+                           get_value=self.get_detail_value,
+                           apm_list=apm_list,
+                           return_url=return_url)
+
+class Flight_Airportedium_View(AuthenticatedModelView):
+    column_display_pk = True
+    can_view_details = True
+    can_export = True
+    # edit_modal = True
+    page_size = 10
+    column_filters = ['id']
+    column_searchable_list = ['id']
+    column_labels = {
+        'id': 'Mã trạm dừng',
+        'stop_time_begin': 'Thời gian bắt đầu dừng',
+        'stop_time_finish': 'Thời gian tiếp tục bay',
+        'description': 'Mô tả'
+    }
+
 admin.add_view(FlightManagementView(Flight, db.session, name='Quản lý chuyến bay', endpoint='flights'))
+admin.add_view(Flight_Airportedium_View(Flight_AirportMedium, db.session, name='Trạm dừng', endpoint='stops'))
 admin.add_view(ChatAdmin(name='ChatAdmin'))
 admin.add_view(LogoutView(name='Logout'))

@@ -30,6 +30,6 @@ function create_prices(flight_id) {
                 price += `<span id="${index}">${item.price} VNĐ loại ${item.rank}</span><br>`;
             }
         })
-        document.getElementById(`p-${flight_id-1}`).innerHTML = price;
+        document.getElementById(`p-${flight_id}`).innerHTML = price;
     })
 }
