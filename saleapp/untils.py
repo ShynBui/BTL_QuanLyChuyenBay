@@ -8,6 +8,13 @@ import json
 import hashlib
 from sqlalchemy.sql import extract
 
+def get_host_room_avatar(room_id):
+    user = Message.query.filter(Message.room_id.__eq__(room_id),
+                                Message.content.__eq__('')).first()
+
+    username = get_user_by_id(user.id);
+
+    return username.avatar
 
 def get_id_by_username(username):
     id = User.query.filter(User.username.__eq__(username))
@@ -64,6 +71,10 @@ def get_chatroom_by_room_id(id):
 
     print(id_room.first())
     return id_room.first()
+
+def get_chatroom_by_id(id):
+    id_room = Room.query.filter(Room.id.__eq__(id))
+    return id_room.first();
 
 
 def change_room_status(id, change):

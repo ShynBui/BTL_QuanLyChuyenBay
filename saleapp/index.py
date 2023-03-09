@@ -45,16 +45,25 @@ def chat_room():
 
     user_send = [untils.get_user_by_id(x.user_id).name for x in untils.load_message(room.room_id)]
 
+    user_image = [untils.get_user_by_id(x.user_id).avatar for x in untils.load_message(room.room_id)]
+
+    user_id = [x.user_id for x in untils.load_message(room.room_id)]
+
+    host_avatar = untils.get_host_room_avatar(room.room_id);
+
     user_send.pop(0)
+    user_image.pop(0)
+    user_id.pop(0)
 
     print(user_send)
 
     if user_name and room:
 
         print(untils.load_message(room.room_id)[0].content)
-        return render_template('chatroom.html', user_name=user_name, room=room.room_id, name=current_user.name,
-                               message=untils.load_message(room.room_id), room_id=int(room.room_id),
-                               user_send=user_send, n=len(user_send))
+        return render_template('chatroom.html', user_name=user_name, room=room.room_id, name= current_user.name,
+                               message=untils.load_message(room.room_id), room_id = int(room.room_id),
+                               user_send= user_send, n=len(user_send), user_image=user_image, user_id=user_id, room_name = untils.get_chatroom_by_id(room.room_id),
+                               host_avatar=host_avatar);
     else:
         return redirect(url_for('home'))
 
@@ -84,6 +93,8 @@ def handle_send_message_event(data):
     app.logger.info("{} has sent message to the room {}: {}".format(data['username'],
                                                                     data['room'],
                                                                     data['message']))
+
+    app.logger.info("{}".format(data['user_avatar']))
     socketio.emit('receive_message', data, room=data['room'])
 
 

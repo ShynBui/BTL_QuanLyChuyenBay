@@ -5,7 +5,6 @@ import cloudinary.uploader
 from flask_admin.form import FormOpts
 from flask_admin.helpers import get_redirect_target
 from flask_admin.model.helpers import get_mdict_item_or_list
-from flask_wtf import FlaskForm
 from wtforms import StringField, DateTimeLocalField, SelectField
 from wtforms.validators import InputRequired, Length
 
@@ -48,7 +47,7 @@ class ChatAdmin(BaseView):
 class MyAdminIndex(AdminIndexView):
     @expose('/')
     def index(self):
-        total = Decimal(0)
+        total = 0.0
         airline_name = request.args.get('airline_name')
         date = request.args.get('month')
         statistics = untils.statistic_revenue_follow_month(airline_name=airline_name,
