@@ -281,8 +281,6 @@ def buy_ticket3():
     seats = dao.get_seat(rank_id=2)
     for vs in vip_seats:
         vs.available = dao.is_seat_available(seat_id=vs.id, flight_id=flight_id)
-        if vs.available:
-            print(vs.name)
     for s in seats:
         s.available = dao.is_seat_available(seat_id=s.id, flight_id=flight_id)
 
