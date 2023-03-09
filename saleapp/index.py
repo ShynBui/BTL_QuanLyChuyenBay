@@ -21,7 +21,7 @@ def home():
         date = datetime.strptime(date, "%Y-%m-%d").date()
         for f in flights:
             f_d = f.departing_at.date()
-            if f.airline.departing_airport.name == start and f.airline.arriving_airport.name == finish\
+            if f.airline.departing_airport.name == start and f.airline.arriving_airport.name == finish \
                     and f_d == date:
                 if 'vip' in request.form:
                     p = untils.get_prices_of_flight(f.id)
@@ -205,7 +205,20 @@ def buy_ticket2():
     date = request.args.get('date')
     flights = dao.get_flights(FROM, TO, date)
     for f in flights:
+        seats = dao.get_seat()
+        vip_seats_count = 0
+        seats_count = 0
+        for s in seats:
+            if dao.is_seat_available(seat_id=s.id, flight_id=f.id):
+                if s.rank_id == 1:
+                    vip_seats_count += 1
+                else:
+                    seats_count += 1
         f.fa_amount = len(f.airportMediums)
+        f.vip_seats_count = vip_seats_count
+        f.seats_count = seats_count
+        if vip_seats_count == 0 and seats_count == 0:
+            flights.remove(f)
     return render_template('buyticket2.html', flights=flights)
 
 
@@ -254,11 +267,11 @@ def total():
     return jsonify(utils.cart_stats(cart["seats"]))
 
 
-@app.route('/buy-ticket/step-3')
+@app.route('/buy-ticket/step-3/')
 def buy_ticket3():
     key = app.config['CART_KEY']
     if key not in session or "flight_id" not in session[key]:
-        redirect("/buy-ticket", code=404)
+        return redirect("/buy-ticket")
     cart = session.get(key)
     if "seats" in cart:
         del cart["seats"]
@@ -268,6 +281,8 @@ def buy_ticket3():
     seats = dao.get_seat(rank_id=2)
     for vs in vip_seats:
         vs.available = dao.is_seat_available(seat_id=vs.id, flight_id=flight_id)
+        if vs.available:
+            print(vs.name)
     for s in seats:
         s.available = dao.is_seat_available(seat_id=s.id, flight_id=flight_id)
 
@@ -297,8 +312,13 @@ def buy_ticket3():
 @app.route("/buy-ticket/step-4")
 def cus_form():
     key = app.config['CART_KEY']
+    if key not in session or "flight_id" not in session[key] or "seats" not in session[key] or len(
+            session[key]["seats"]) == 0:
+        return redirect("/buy-ticket")
+    key = app.config['CART_KEY']
     seats = session[key]["seats"]
     return render_template('fillform.html', seats=seats)
+
 
 @app.route("/api/index/")
 def airports():
@@ -311,6 +331,7 @@ def airports():
         })
 
     return jsonify(data)
+
 
 @app.route("/api/index/price/")
 def prices():
@@ -357,7 +378,6 @@ def get_orders():
 
 @app.route('/order/<order_id>')
 def detail_order(order_id):
-
     id = current_user.id
 
     ords = dao.get_order(user_id=id, order_id=order_id)

@@ -59,7 +59,7 @@
             {% for k in range(2, 4) %}
             <div>
                 {% for j in range(vs_count) %}
-                    {% if seats[k][j].available %}
+                    {% if vip_seats[k][j].available %}
                     <div onclick="selectSeat(this, {{vip_seats[k][j].id}}, '{{vip_seats[k][j]}}', '{{vip_seats[k][j].rank.id}}')"
                          class="seat vip-seat cell mx-2 my-3"></div>
                     {% else %}
