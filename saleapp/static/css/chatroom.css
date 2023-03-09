@@ -1,0 +1,150 @@
+html,body{
+    width:100%;
+    height:100%;
+}
+html{
+    overflow:hidden;
+}
+body{
+  background-image: url(https://www.bayviet.com.vn/wp-content/uploads/2018/04/background-bay-viet-2-1.jpg)
+
+}
+.boxed{
+    width: 0;
+    height: 0;
+
+    border-top:18px solid #ebb3d0 ;
+    border-left:10px solid transparent; ;
+    border-right:10px solid transparent;
+    border-bottom:10px solid transparent ;
+    position: absolute;
+
+    right: 17px;
+    bottom: -28px;
+}
+.container{
+
+    width: 100%;
+    height: 100%;
+
+}
+.header__chat{
+
+    height:8%;
+    width: 100%;
+    background-color:#ffecf2;
+    border: 1px solid;
+    border-color: #cfcfcf;
+
+
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+}
+.header__chat > h1{
+
+    width: 90%;
+
+}
+.icon__header{
+   color:#fe0a9a;
+    display:flex;
+    width: 10%;
+    justify-content: space-around;
+}
+.mid__chat{
+background-color:#fde5f1;
+overflow-y:scroll;
+height:77%;
+padding:10px;
+
+border-right: 1px solid;
+
+border-left: 1px solid;
+ border-color: #cfcfcf;
+}
+.bot__chat{
+    padding-left:10px;
+    height:10%;
+   background-color:#fde5f1;
+
+     border-right: 1px solid;
+    border-bottom: 1px solid;
+border-left: 1px solid;
+ border-color: #cfcfcf;
+}
+.other__text{
+padding: 10px;
+    background: #e4e6eb;
+    overflow: auto;
+    border-radius: 10px 15px;
+    }
+.my__text{
+    background-color: #fe0a9a;
+    color: white;
+    padding: 10px;
+    margin-left: 5px;
+     border-radius: 10px 15px;
+}
+#messages{
+   text-align: center;
+}
+b::before{
+    font:size:20px;
+}
+#message_input_form{
+    width:100%;
+        margin-top: 13px;
+            position: fixed;
+    bottom: 10;
+    display:flex;
+    align-items: center;
+}
+#message_input{
+    width:60%;
+        border-radius: 12px;
+    background-color: #e8bed4;
+    padding: 12px 17px 14px 21px;
+    border: unset;
+}
+#submit{
+ color:#fe0a9a;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    border: unset;
+    background-color: unset;
+}
+#submit:hover{
+    background-color: #f3f3f5;
+}
+input:focus{
+outline:0}
+.emoji{
+    position:relative;
+}
+.emoji{
+    color: #fe0a9a;
+}
+.album_emoji{
+    position: absolute;
+
+    right: -13px;
+    background: #ebb3d0;
+    top:-160px;
+    width: 200px;
+    flex-wrap : wrap;
+    display:none;
+       border-radius: 7px;
+    padding: 3px;
+
+}
+.album_emoji p{
+    font-size:20px;
+}
+/*.emoji:hover .album_emoji{
+    display:flex;
+}*/
+p:hover{
+    cursor:pointer;
+}

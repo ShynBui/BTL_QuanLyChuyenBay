@@ -5,38 +5,232 @@
 
 {% block content %}
 
-<h1> Hi: {{current_user.username}}</h1>
+<div class="header__chat">
+<!--    <h1> Hi: {{current_user.username}}</h1>-->
+    <img src={{host_avatar}} style="width:40px; border-radius:50px;height:40px; margin-left:10px"  alt="">
+<h1 style="font-size:20px; padding-left:10px;">
+    {{room_name}}
+    <b><i data-visualcompletion="css-img" aria-label="Tài khoản đã xác minh" class="" role="img" style="background-image: url(&quot;https://static.xx.fbcdn.net/rsrc.php/v3/yt/r/a-Rc8GEsXL2.png&quot;); background-position: -170px -62px; background-size: 190px 186px; width: 16px; height: 16px; background-repeat: no-repeat; display: inline-block;"></i></b>
+</h1>
 
-<h1> Welcome to chatroom: {{room}}</h1>
+<div class="icon__header">
+                    <div class="phone">
+                        <i class='bx bxs-phone bx-sm'></i>
+                    </div>
+                    <div class="video">
+                        <i class='bx bxs-video bx-sm'></i>
+                    </div>
+                    <div class="sub__dot">
+                        <i class='bx-sm bx bx-dots-horizontal-rounded' ></i>
+                    </div>
+                </div>
+</div>
 
+<div class="mid__chat">
+    <path d="M20.685.12c-2.229.424-4.278 1.914-6.181 3.403L5.4 10.94c-2.026 2.291-5.434.62-5.4-2.648V.12h20.684z"></path>
+    {%for i in range(n)%}
+    {%if current_user.id == user_id[i]%}
 
-{%for i in range(n)%}
-<div> <b>{{user_send[i]}}</b>: {{message[i + 1].content}} </div>
+    <div style="display: flex;align-items: center;justify-content: flex-end;margin-top:25px">
 
+        <div class="my__text"> <b>{{user_send[i]}}</b>: {{message[i + 1].content}} </div>
+        <img src="{{user_image[i]}}" alt="" style="width: 40px;height: 40px;border-radius: 50%;margin-left: 10px;">
+    </div>
+    {%else%}
+
+        <div style="display: flex;align-items: center;justify-content: flex-start;margin-top:25px">
+
+        <img src="{{user_image[i]}}" alt="" style="width: 40px;height: 40px;border-radius: 50%;margin-right: 10px;">
+        <div class="other__text"><b>{{user_send[i]}}</b>: {{message[i + 1].content}} </div>
+    </div>
+    {%endif%}
 {%endfor%}
+    <div id="messages"></div>
+</div>
 
-<div id="messages"></div>
 
-<form id="message_input_form">
+<div class="bot__chat">
+    <form id="message_input_form">
     <input type="text" id="message_input" placeholder="Enter message here" />
-    <button type="submit" name="message">Send</button>
+    <button id="submit" type="submit" name="message"><i class='bx bxs-send bx-sm'></i></button>
+    <div class="emoji">
+        <i class='bx bx-smile bx-sm'></i>
+        <div class="album_emoji">
+            <div class="boxed">
 
+            </div>
+        </div>
+
+
+    </div>
 
 </form>
+</div>
 
 
 {% endblock %}
 
+{% block css %}
+<link href="{{ url_for('static', filename='css/chatroom.css') }}"
+      rel="stylesheet"/>
+ <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+{%endblock%}
+
 {%block script %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.6.1/socket.io.js"></script>
-<script>
-        const socket = io.connect("http://127.0.0.1:5000");
 
+<script>
+        const $ = document.querySelector.bind(document)
+        const $$ = document.querySelectorAll.bind(document)
+        const emojis = {
+    album_emoji: [
+        {
+            code: '	&#128512',
+
+        },
+        {
+            code: '&#128513',
+
+        },
+        {
+            code: '&#128514',
+
+        },
+        {
+            code: '&#128515',
+
+        },
+        {
+            code: '&#128516',
+
+        },
+        {
+            code: '&#128517',
+
+        },
+        {
+            code: '&#128518',
+
+        },
+        {
+            code: '&#128519',
+
+        },
+        {
+            code: '&#128520',
+
+        },
+        {
+            code: '&#128521',
+
+        },
+        {
+            code: '&#128522',
+
+        },
+        {
+            code: '&#128523',
+
+        },
+        {
+            code: '&#128524',
+
+        },
+        {
+            code: '&#128525',
+
+        },
+        {
+            code: '&#128526',
+
+        },
+        {
+            code: '&#128527',
+
+        },
+        {
+            code: '&#128528',
+
+        },
+        {
+            code: '&#128529',
+
+        },
+        {
+            code: '&#128530',
+
+        },
+        {
+            code: '&#128531',
+
+        },
+        {
+            code: '&#128532',
+
+        }
+
+    ],
+
+
+
+
+    render: function(){
+
+        const htmls = this.album_emoji.map(function(emoji, i) {
+            return `
+            <div class="icon">
+            <p data-code ="${emoji.code}">${emoji.code}</p>
+            </div>
+            `
+        });
+
+        $('.album_emoji').innerHTML += htmls.join('');
+    },
+    start: function(){
+        this.render();
+    }
+}
+emojis.start();
+
+
+
+        const album_emojis = $('.album_emoji');
+        const emoji_icon = $('.emoji');
+        const mid_chat = $('.mid__chat');
+
+
+        mid_chat.addEventListener('click', onClickMidChat)
+
+        emoji_icon.addEventListener('click', onClickEmojis);
+        const input_value = $('#message_input');
+
+         album_emojis.addEventListener('click', onListClick);
+
+        function onClickEmojis(){
+           album_emojis.style.display = 'flex';
+        }
+        function onClickMidChat(){
+           album_emojis.style.display = 'none';
+        }
+
+          function onListClick(e){
+                var gtri = e.target.getAttribute('data-code');
+
+                const htmls = `${gtri}`
+                input_value.value += htmls;
+
+       }
+
+
+
+        const socket = io.connect("http://127.0.0.1:5000");
         socket.on('connect', function () {
             socket.emit('join_room', {
                 username: "{{ user_name }}",
                 room: "{{ room }}",
-                room_id: {{room_id}}
+                room_id: {{room_id}},
+                user_id: {{current_user.id}},
+                user_avatar: "{{current_user.avatar}}"
             })
 
             let message_input = document.getElementById('message_input')
@@ -48,12 +242,13 @@
                         username: "{{ user_name }}",
                         room: "{{ room }}",
                         message: message,
+                        user_id: {{current_user.id}},
+                        user_avatar: "{{current_user.avatar}}"
                         })
                 }
                 message_input.value = '';
                 message_input.focus();
 
-                console.log("đs")
                 socket.emit('save_message', {
                     message: message,
                     room: {{room_id}}
@@ -64,16 +259,45 @@
         });
 
         socket.on('receive_message', function (data) {
-            console.log(data);
+
             const newNode = document.createElement('div');
-            newNode.innerHTML = `<b>${data.username}:&nbsp;</b> ${data.message}`;
+            const avatar = data['user_avatar'].replaceAll('&amp;', '&')
+            const img = document.createElement('img');
+
+
+            if (data['user_id'] == {{current_user.id}}) {
+                const htmls = `
+                <div style="display: flex;align-items: center;justify-content: flex-end;margin-top:25px">
+
+                 <div class="my__text">  <b style="font-size:20px">${data.username}:&nbsp;</b>
+
+                  <b style="font-size:20px;font-weight:500 !important;">${data.message}</b> </div>
+                  <img src="${data['user_avatar']}" style="width: 40px;height: 40px;border-radius: 50%;margin-left: 10px;" alt="">
+                </div>
+                `;
+
+                newNode.innerHTML = htmls;
+
+
+            }
+            else {
+
+                const htmls = `
+                <div style="display: flex;align-items: center;justify-content: flex-start; margin-top:25px">
+                  <img src="${data['user_avatar']}" style="width: 40px;height: 40px;border-radius: 50%;margin-right: 20px;" alt="">
+                 <div class="other__text">  <b style="font-size:20px">${data.username}:&nbsp;</b>
+                  <b style="font-size:20px;font-weight:500 !important;">${data.message}</b> </div>
+
+                </div>
+                `;
+                newNode.innerHTML = htmls;
+            }
             document.getElementById('messages').appendChild(newNode);
 
             let all_message = document.getElementById('messages')
             console.log(all_message)
 
         });
-
         socket.on('join_room_announcement', function (data) {
             console.log(data);
             const newNode = document.createElement('div')
@@ -81,8 +305,8 @@
             document.getElementById('messages').appendChild(newNode);
         });
 
-
 </script>
+<script src="{{ url_for('static', filename='js/chatroom.js') }}"></script>
 {%endblock%}
 
 
