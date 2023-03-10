@@ -6,6 +6,9 @@
                 <li>
                     <a class="nav-link" href="{{url_for('home')}}">Trang chủ <span class="sr-only"></span></a>
                 </li>
+                <li>
+                    <a class="nav-link" href="{{url_for('news')}}">Tin tức<span class="sr-only"></span></a>
+                </li>
                 {%if current_user.is_authenticated %}
 
             <li class="nav-item">
@@ -14,19 +17,9 @@
             <li class="nav-item">
                 <a class="nav-link" href="{{url_for('get_orders')}}">Xem các đơn đã mua</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{{url_for('user_signout')}}">Đăng xuất</a>
-            </li>
 
             <li class="nav-item active">
                 <a class="nav-link" href="{{url_for('chat_room')}}">Chat room <span class="sr-only"></span></a>
-            </li>
-            {%else%}
-            <li class="nav-item">
-                <a class="nav-link" href="{{url_for('user_signin')}}">Đăng nhập</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{{url_for('user_register')}}">Đăng ký</a>
             </li>
             {%endif%}
                 <li>
@@ -41,7 +34,7 @@
                                     <span>/</span>
                                 </div>
                                 <div class="flex logout">
-                                    <a href="/logout">Đăng xuất</a>
+                                    <a href="{{url_for('user_signout')}}">Đăng xuất</a>
                                 </div>
                             {% else %}
                                 <div class="flex">
@@ -51,7 +44,7 @@
                                     <span>/</span>
                                 </div>
                                 <div class="flex" id="login">
-                                    <a href="javascript:void(0);">Đăng nhập</a>
+                                    <a href="{{url_for('user_signin')}}">Đăng nhập</a>
                                 </div>
                             {% endif %}
                         </div>
@@ -68,7 +61,7 @@
             </p>
         </div>
 
-        <div class="Slogan-btn">
+        <div class="Slogan-bn">
             <div class="out-line">
                 <div class="in-line">
                     <a href="{{url_for('buy_ticket')}}" target="_self">ĐẶT VÉ NGAY!!!</a>

@@ -92,9 +92,9 @@ header {
   font-size: 75px;
 }
 
-.Slogan-btn {
+.Slogan-bn {
   width: 30%;
-  animation: btn 2s ease-in-out infinite alternate;
+  animation: bn 2s ease-in-out infinite alternate;
 }
 
   .in-line {
@@ -138,7 +138,7 @@ header {
     z-index: 999;
   }
 
-  @keyframes btn {
+  @keyframes bn {
     0%, 100% {
       transform:translateY(10%);
     }

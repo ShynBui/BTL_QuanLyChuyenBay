@@ -33,6 +33,10 @@ def home():
         len_of_flights = len(data_fill)
     return render_template('index.html', data_fill=data_fill, len_of_flights=len_of_flights)
 
+@app.route("/news")
+def news():
+    return render_template('news.html')
+
 
 # socket
 
