@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="https://res.cloudinary.com/doaux2ndg/image/upload/v1670076213/FlightMangement/icon-web_fgxmmq.png">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
+        integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.min.js"></script>
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
+        integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@ciar4n/izmir@1.0.1/izmir.min.css">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/menu.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/news.css') }}">
+
+    <script src="{{ url_for('static', filename='js/news-data.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/news.js') }}"></script>
+
+
+    <title>Afforda</title>
+</head>
+
+<body>
+    <!-- Menu -->
+    <header>
+        <div class="main-menu">
+            <img src="https://res.cloudinary.com/doaux2ndg/image/upload/v1670076219/FlightMangement/logo_komha6.png" alt="logo">
+            <div class="menu">
+                <ul class="flex menu-items">
+                    <li>
+                        <a href="/">Trang chủ</a>
+                    </li>
+                    <li class="news">
+                        <a href="#">Tin tức</a>
+                    </li>
+                    {%if current_user.is_authenticated %}
+
+                <li class="nav-item">
+                    <a class="nav-link" href="{{url_for('buy_ticket')}}">Mua vé</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{url_for('get_orders')}}">Xem các đơn đã mua</a>
+                </li>
+
+                <li class="nav-item active">
+                    <a class="nav-link" href="{{url_for('chat_room')}}">Chat room <span class="sr-only"></span></a>
+                </li>
+                {%endif%}
+                <li>
+                    <div class="user">
+                        <a href="#"><i class="fas fa-user"></i></a>
+                        <div class="flex menu-user">
+                            {% if current_user.is_authenticated %}
+                            <div class="flex" id="admin">
+                                <a href="/admin">Quản trị</a>
+                            </div>
+                            <div>
+                                <span>/</span>
+                            </div>
+                            <div class="flex logout">
+                                <a href="/logout">Đăng xuất</a>
+                            </div>
+                            {% else %}
+                            <div class="flex">
+                                <a href="/register">Đăng ký</a>
+                            </div>
+                            <div>
+                                <span>/</span>
+                            </div>
+                            <div class="flex" id="login">
+                                <a href="{{url_for('user_signin')}}">Đăng nhập</a>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </li>
+                </ul>
+            </div>
+        </div>
+        <div class="flex welcom">
+            <br>
+            <span>
+                Chào mừng bạn đã đến với Afforda - Nơi cung cấp dịch vụ du lịch đẳng cấp tại Việt Nam.
+            </span>
+        </div>
+    </header>
+
+    <!-- tour hot -->
+    <section class="hot-tour">
+        <div class="title">
+            <h2>NHỮNG TOUR HÚT KHÁCH</h2>
+        </div>
+        <div class="flex items">
+            <div class="flex cover-items"></div>
+        </div>
+    </section>
+
+    <!-- Cam nang du lich -->
+    <section class="handbook">
+        <div>
+            <h2>CẨM NANG DU LỊCH</h2>
+        </div>
+        <div class="flex handbook-content">
+            <div class="handbook-items">
+                <div class="flex handbook-item">
+                    <div class="col30 handbook-img item1-c3 flex"></div>
+                    <div class="col70 handbook-info item1-c7"></div>
+                </div>
+                <div class="flex handbook-item">
+                    <div class="col70 handbook-info item2-c7"></div>
+                    <div class="col30 handbook-img item2-c3 flex"></div>
+                </div>
+                <div class="flex handbook-item">
+                    <div class="col30 handbook-img item3-c3 flex"></div>
+                    <div class="col70 handbook-info item3-c7"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- kinh nghiem du lich -->
+    <section class="experience">
+        <div>
+            <h2>KINH NGHIỆM DU LỊCH</h2>
+        </div>
+        <div class="flex content">
+            <div class=" flex E-items"></div>
+        </div>
+    </section>
+
+    <!-- footer -->
+    <footer>
+        <div class="flex footer-items">
+            <div class="flex col33">
+                <div class="col1">
+                    <img src="../images/logo.png" alt="Logo">
+                    <div class="infomation">
+                        <i class="fas fa-map-signs">
+                            <span> 512 Nguyễn Thái Sơn - Gò Vấp - TP HCM </span>
+                        </i>
+                        <br>
+                        <i class="fas fa-phone-alt">
+                            <span> 0399411749</span>
+                        </i>
+                        <br>
+                        <i class="fas fa-envelope">
+                            <span> afforda@gmail.com</span>
+                        </i>
+                        <br>
+                        <i class="fas fa-clock">
+                            <span>Mon - Sat: 8h00 - 17h30</span>
+                        </i>
+                    </div>
+                    <br>
+                    <div class="social">
+                        <span>Social:</span>
+                        <a href="https://www.facebook.com/" target="blank" id="1"><i class="fab fa-facebook-f"></i></a>
+                        <a href="https://twitter.com/" target="blank" id="2"><i class="fab fa-twitter"></i></a>
+                        <a href="https://www.linkedin.com/" target="blank" id="3"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="https://www.google.com.vn/" target="blank" id="4"><i
+                                class="fab fa-google-plus-g"></i></a>
+                        <a href="https://www.youtube.com/" target="blank" id="5"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="flex col33">
+                <div class="col2">
+                    <div>
+                        <h1>Khách Hàng</h1>
+                    </div>
+                    <div class="flex c-menu">
+                        <ul>
+                            <li><a href="#">Điều kiện & điều khoản</a></li>
+                            <li><a href="#">Quyền riêng tư</a></li>
+                            <li><a href="#">Chính sách bảo mật và thông tin</a></li>
+                            <li><a href="#">Ý kiến khách hàng</a></li>
+                            <li><a href="#">Phương thức thanh toán</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="flex col33">
+                <div class="col3">
+                    <div class="flex col3-title">
+                        <h1>Đăng Ký</h1>
+                    </div>
+                    <div class="flex col3-items">
+                        <div class="col3-item">
+                            <div>
+                                <div>
+                                    <span>Đăng kí để được nhận thông tin khuyến mãi một cách nhanh chóng!</span>
+                                </div>
+                                <br>
+                                <div>
+                                    <div>
+                                        <input type="text" placeholder="Nhập email" />
+                                    </div>
+                                    <div class="flex btn">
+                                        <button>Đăng ký</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+
+</html>

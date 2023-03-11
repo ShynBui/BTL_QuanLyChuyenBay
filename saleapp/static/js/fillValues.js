@@ -27,7 +27,7 @@ function create_prices(flight_id) {
     .then(data => {
         data.forEach((item, index) => {
             if (item.flight_id == flight_id) {
-                price += `<span id="${index}">${item.price} VNĐ loại ${item.rank}</span><br>`;
+                price += `<span id="${index}">${item.price}000 VNĐ loại ${item.rank}</span><br>`;
             }
         })
         document.getElementById(`p-${flight_id}`).innerHTML = price;

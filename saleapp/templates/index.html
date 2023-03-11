@@ -4,38 +4,73 @@
 
 
 {% block content %}
-<section class="row" style="margin: 2% 0;">
-    <h1 class="text-center text-info">TÌM CHUYẾN BAY</h1>
-    <form method="POST" class=" row g-3 needs-validation border" validate style="margin: 2% 0; padding: 2% 4%;">
-        <div class="col-md-4">
-            <label for="validationCustom01" class="form-label">Nơi đi:</label>
-            <select class="form-select" name="start" id="validationCustom01" required></select>
-        </div>
-        <div class="col-md-4">
-            <label for="validationCustom02" class="form-label">Nơi đến:</label>
-            <select class="form-select" name="finish" id="validationCustom02" required></select>
-        </div>
-        <div class="col-md-4">
-            <label for="validationCustom03" class="form-label">Ngày đi:</label>
-            <input type="date" class="form-control" id="validationCustom03"
-                   name="date" value="">
-        </div>
+<a class="nav-link" href="{{url_for('chat_room')}}">
+    <i class="fas fa-comments" style="font-size: 75px; position: fixed; bottom:50px; right:50px;  z-index:1000;"></i>
+</a>
 
-        <div class="col-12">
-            <div class="form-check">
-                <input class="form-check-input" name="vip" type="checkbox" value="" id="invalidCheck">
-                <label class="form-check-label" for="invalidCheck">
-                    Hạng thương gia
-                </label>
-                <div class="invalid-feedback">
-                    You must agree before submitting.
+<section class="row" style="margin: 2% 0;">
+    <section class="col-md-4" style="margin: 5% 0;">
+        <div id="carouselExampleInterval" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner">
+                <div class="carousel-item active" data-bs-interval="10000">
+                    <img src="https://i.pinimg.com/originals/91/47/96/914796d6ad659ba6b6dcf6df40b0debb.jpg"
+                         class="d-block w-100" alt="...">
+                </div>
+                <div class="carousel-item" data-bs-interval="2000">
+                    <img src="https://i.pinimg.com/originals/87/89/d7/8789d74dd261eb9807189a5705f52c90.jpg"
+                         class="d-block w-100" alt="...">
+                </div>
+                <div class="carousel-item">
+                    <img src="https://i.pinimg.com/originals/0e/78/b0/0e78b081e1a0f706e95d067ab043cf76.jpg"
+                         class="d-block w-100" alt="...">
                 </div>
             </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleInterval"
+                    data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleInterval"
+                    data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
         </div>
-        <div class="col-12">
-            <button class="btn btn-primary" type="submit">Tìm</button>
-        </div>
-    </form>
+    </section>
+    <div class="col-md-8">
+        <h1 class="text-center text-info">TÌM CHUYẾN BAY</h1>
+        <form method="POST" class=" row g-3 needs-validation border" validate style="margin: 2% 0; padding: 2% 4%;">
+            <div class="col-md-4">
+                <label for="validationCustom01" class="form-label">Nơi đi:</label>
+                <select class="form-select" name="start" id="validationCustom01" required></select>
+            </div>
+            <div class="col-md-4">
+                <label for="validationCustom02" class="form-label">Nơi đến:</label>
+                <select class="form-select" name="finish" id="validationCustom02" required></select>
+            </div>
+            <div class="col-md-4">
+                <label for="validationCustom03" class="form-label">Ngày đi:</label>
+                <input type="date" class="form-control" id="validationCustom03"
+                       name="date" value="">
+            </div>
+
+            <div class="col-12">
+                <div class="form-check">
+                    <input class="form-check-input" name="vip" type="checkbox" value="" id="invalidCheck">
+                    <label class="form-check-label" for="invalidCheck">
+                        Hạng thương gia
+                    </label>
+                    <div class="invalid-feedback">
+                        You must agree before submitting.
+                    </div>
+                </div>
+            </div>
+            <div class="col-12">
+                <button class="btn btn-primary" type="submit">Tìm</button>
+            </div>
+        </form>
+    </div>
+
 </section>
 
 <section class="row" style="margin: 2% 0;">
@@ -52,20 +87,22 @@
                     <span id="p-{{ data_fill[f].id }}"></span>
                 </p>
             </div>
-            <div class="col-12">
-                <a class="btn btn-danger" style="margin-bottom: 5%; color: white;">Mua</a>
-            </div>
         </div>
         {% endfor %}
     </div>
 </section>
-</div>
 
 
 {% endblock %}
 
 {% block js %}
 <script src="{{ url_for('static', filename='js/fillValues.js') }}"></script>
+<script src="{{ url_for('static', filename='js/chat.js') }}"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
 <script>
     window.addEventListener("load", (event) => {
         create_options();
@@ -76,7 +113,8 @@
             create_prices(flight_id[i].textContent);
         }
     });
-
 </script>
 {% endblock %}
-
+{% block header %}
+{%include 'layout/header.html' %}
+{%endblock%}
