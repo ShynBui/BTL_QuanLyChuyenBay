@@ -1,18 +1,19 @@
-def toUpperText(text):
-    text.replace(" ", "")
-    return text.upper()
+def create_data(n, ascii_code, data):
+    for i in range(n):
+        data.append(chr(ascii_code))
+        ascii_code += 1
+
+    return data
 
 # Thuat giai Caeser
-def encoding_no1 (plaintext, n, k):
+def encoding_no1 (plaintext, k):
+    n = 95
     data = []
     plainindex_range = []
     ciphertext = ""
 
-    ascii_code = 65
-    plaintext = toUpperText(plaintext)
-    for i in range(n):
-        data.append(chr(ascii_code))
-        ascii_code += 1
+    create_data(n, 32, data)
+
 
     for p in plaintext:
         for d in range(len(data)):
@@ -26,18 +27,15 @@ def encoding_no1 (plaintext, n, k):
     return ciphertext
 
 #Thuat giai Vigener
-def encoding_no2 (plaintext, n, key):
+def encoding_no2 (plaintext, key):
+    n = 95
     data = []
     plainindex_range = []
     keyindex_rang = []
     ciphertext = ""
     index=0
 
-    ascii_code = 65
-    plaintext = toUpperText(plaintext)
-    for i in range(n):
-        data.append(chr(ascii_code))
-        ascii_code += 1
+    create_data(n, 32, data)
 
     for p in plaintext:
         for d in range(len(data)):
