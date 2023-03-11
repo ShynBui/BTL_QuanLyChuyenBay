@@ -1,18 +1,13 @@
-def toUpperText(text):
-    text.replace(" ", "")
-    return text.upper()
+from saleapp import encoding
 
 # Thuat giai Caeser
-def decoding_no1 (ciphertext, n = 26, k = 1):
+def decoding_no1 (ciphertext, k = 1):
+    n = 95
     data = []
     cipherindex_range = []
     plaintext = ""
 
-    ascii_code = 65
-    ciphertext = toUpperText(ciphertext)
-    for i in range(n):
-        data.append(chr(ascii_code))
-        ascii_code += 1
+    encoding.create_data(n, 32, data)
 
     for i in range(len(ciphertext)):
         for d in range(len(data)):
@@ -28,18 +23,15 @@ def decoding_no1 (ciphertext, n = 26, k = 1):
     return plaintext
 
 # Thuat ma Vigener
-def decoding_no2 (ciphertext, n, key):
+def decoding_no2 (ciphertext, key):
+    n = 95
     data = []
     cipherindex_range = []
     keyindex_rang = []
     plaintext = ""
     index=0
 
-    ascii_code = 65
-    ciphertext = toUpperText(ciphertext)
-    for i in range(n):
-        data.append(chr(ascii_code))
-        ascii_code += 1
+    encoding.create_data(n, 32, data)
 
     for c in ciphertext:
         for d in range(len(data)):

@@ -12,4 +12,4 @@ function changeColor() {
     index++;
 }
 
-setInterval(changeColor, 1000);
+setInterval(changeColor, 300);
