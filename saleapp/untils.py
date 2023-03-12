@@ -1,6 +1,7 @@
 from datetime import datetime
 
-from saleapp.models import User, UserRole, Room, Message, Airport, Flight, PriceOfFlight, Airline, PlaneTicket
+from saleapp.models import User, UserRole, Room, Message, Airport, Flight, PriceOfFlight, Airline, PlaneTicket, \
+    Flight_AirportMedium, Rank
 from flask_login import current_user
 from sqlalchemy import func, and_, desc
 from saleapp import app, db
@@ -132,3 +133,182 @@ def statistic_revenue_follow_month(airline_name=None, date=None):
                              extract('month', PlaneTicket.date) == date.month)
 
     return stats.all()
+
+
+def load_airports():
+    return Airport.query.all()
+
+
+def get_apm_by_flight_id(flight_id):
+    return Flight_AirportMedium.query.filter(
+        Flight_AirportMedium.flight_id.__eq__(flight_id)
+    ).all()
+
+
+def del_apm(flight_id, airport_id):
+    apm = Flight_AirportMedium.query.filter(
+        Flight_AirportMedium.flight_id.__eq__(flight_id),
+        Flight_AirportMedium.airport_medium_id.__eq__(airport_id)
+    ).first()
+    db.session.delete(apm)
+    db.session.commit()
+
+
+def del_flight(flight_id):
+    f = Flight.query.get(flight_id)
+    db.session.delete(f)
+    db.session.commit()
+
+
+def take_time(str_date, format):
+    default_date = datetime(1900, 1, 1)
+    date = datetime.strptime(str_date, format)
+    time = date - default_date
+    return time
+
+
+def check_time_flight(departing_at, arriving_at):
+    duration = arriving_at - departing_at
+    rt = take_time("00:30:00", "%H:%M:%S")
+    if rt:
+        if duration.total_seconds() > rt.total_seconds():
+            msg = "success"
+        else:
+            msg = "Thời gian bay chưa đạt tối thiểu"
+    else:
+        msg = "Hiện chưa có quy định về thời gian bay tối thiểu"
+
+    return msg
+
+
+def check_plane_in_flight(departing_at, arriving_at, plane):
+    planes = Flight.query.filter(Flight.airplane_id.__eq__(plane)).all()
+    if planes:
+        for p in planes:
+            if arriving_at < p.departing_at or p.arriving_at < departing_at:
+                msg = "success"
+            else:
+                msg = "Máy bay đã có lịch bay trong khoảng thời gian này"
+    else:
+        msg = "success"
+
+    return msg
+
+
+def check_flight(departing_at, arriving_at, plane):
+    if departing_at and arriving_at:
+        msg = check_time_flight(departing_at, arriving_at)
+        if msg == 'success':
+            msg = check_plane_in_flight(departing_at, arriving_at, plane)
+    else:
+        msg = "Thông tin chuyến bay chưa được điền đầy đủ!"
+    return msg
+
+
+def save_flight(departing_at, arriving_at, plane, airline):
+    al = Airline.query.all()
+    al_id = ''
+    for a in al:
+        name = f'{a.departing_airport.name} - {a.arriving_airport.name}'
+        if name.__eq__(airline):
+            al_id=a.id
+            break
+
+    f = Flight(departing_at=departing_at, arriving_at=arriving_at,
+               airplane_id=plane, airline_id=al_id)
+    db.session.add(f)
+    db.session.commit()
+
+
+def update_flight(model,departing_at, arriving_at, plane, airline):
+    al = Airline.query.all()
+    al_id = ''
+    for a in al:
+        name = f'{a.departing_airport.name} - {a.arriving_airport.name}'
+        if name.__eq__(airline):
+            al_id = a.id
+            break
+    model.departing_at = departing_at
+    model.arriving_at = arriving_at
+    model.airplane_id = plane
+    model.airline_id = al_id
+    db.session.commit()
+
+
+def check_time_stop(begin, finish, flight_id):
+    rt_begin = take_time("00:20:00", "%H:%M:%S")
+    rt_finish = take_time("00:30:00", "%H:%M:%S")
+
+    stop_duration = finish - begin
+    if stop_duration.total_seconds() >= rt_begin.total_seconds() \
+            and stop_duration.total_seconds() <= rt_finish.total_seconds():
+        f = Flight.query.get(flight_id)
+        if begin > f.departing_at and finish < f.arriving_at:
+            check_duration_msg = 'success'
+        else:
+            check_duration_msg = 'Thời gian dừng không phù hợp với thời gian bay'
+    else:
+        check_duration_msg = 'Thời gian dừng không đúng quy định'
+
+    return check_duration_msg
+
+
+def check_airport_in_medium(airline, stop_airport, flight_id):
+    al = Airline.query.all()
+    al_fr_ap = ''
+    al_to_ap = ''
+    for a in al:
+        name = f'{a.departing_airport.name} - {a.arriving_airport.name}'
+        if name.__eq__(airline):
+            al_fr_ap = a.departing_airport_id
+            al_to_ap = a.arriving_airport_id
+            break
+    ap = Airport.query.filter(Airport.name.__eq__(stop_airport)).first()
+    if ap.id != al_fr_ap and ap.id != al_to_ap:
+        apm = Flight_AirportMedium.query.filter(
+            Flight_AirportMedium.flight_id.__eq__(flight_id),
+            Flight_AirportMedium.airport_id.__eq__(ap.id)
+        ).first()
+        if apm:
+            check_am_msg = 'Sân bay này đã được chọn làm trung gian. Vui lòng chọn sân bay khác!'
+        else:
+            check_am_msg = 'success'
+    else:
+        check_am_msg = 'Sân bay dừng đã thuộc tuyến bay'
+
+    return check_am_msg
+
+
+def check_stop_station(begin, finish, airline, stop_airport, flight_id):
+    if begin and finish:
+        check_am_msg = check_time_stop(begin, finish, flight_id)
+        if check_am_msg == 'success':
+            check_am_msg = check_airport_in_medium(airline, stop_airport, flight_id)
+    else:
+        check_am_msg = 'Thông tin trạm dừng chưa được điền đầy đủ'
+    return check_am_msg
+
+
+def save_airport_medium(min_stop, max_stop, description, flight_id, airport):
+    ap = Airport.query.filter(Airport.name.__eq__(airport)).first()
+    apm = Flight_AirportMedium(stop_time_begin=min_stop, stop_time_finish=max_stop,
+               description=description, flight_id=flight_id, airport_id=ap.id)
+    db.session.add(apm)
+    db.session.commit()
+
+
+def update_apm(model, stop_time_begin, stop_time_finish, description, flight_id, airport):
+    ap = Airport.query.filter(Airport.name.__eq__(airport)).first()
+    model.stop_time_begin = stop_time_begin
+    model.stop_time_finish = stop_time_finish
+    model.description = description
+    model.flight_id = flight_id
+    model.airport_medium_id = ap.id
+    db.session.commit()
+
+
+def save_price(rank, flight_id, price):
+    r = Rank.query.filter(Rank.name.__eq__(rank)).first()
+    p = PriceOfFlight(rank_id=r.id, flight_id=flight_id, price=price)
+    db.session.add(p)
+    db.session.commit()

@@ -125,7 +125,7 @@ class Flight(BaseModel):
     prices = relationship('PriceOfFlight', backref='flight', lazy=True, passive_deletes=True, cascade="all, delete")
 
     def __str__(self):
-        return str(f'từ {self.airline.departing_airport.name} đến {self.airline.arriving_airport.name}')
+        return str(self.id)
 
 
 class PriceOfFlight(BaseModel):

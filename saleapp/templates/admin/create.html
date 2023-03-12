@@ -1,0 +1,117 @@
+{% extends 'admin/model/create.html' %}
+
+{% block create_form %}
+{% if current_user.is_authenticated %}
+<form action="" method="POST" role="form" class="admin-form" enctype="multipart/form-data">
+    <fieldset>
+        {% if sts_msg.__eq__("success") %}
+            {% if am_msg.__eq__("success") or am_msg.__eq__("")%}
+        <div class="alert alert-success">
+            Lưu thành công!
+        </div>
+            {% else %}
+                {% if am_msg != "" %}
+        <div class="alert alert-danger">
+            {{ am_msg }}
+        </div>
+                {% endif %}
+            {% endif %}
+        {% else %}
+            {% if sts_msg != "" %}
+        <div class="alert alert-danger">
+            {{ sts_msg }}
+        </div>
+            {% endif %}
+        {% endif %}
+
+        {{ form.csrf_token }}
+        <div class="form-group ">
+            <label class="control-label">Thời gian khởi hành
+                <strong style="color: red">*</strong>
+            </label>
+            {{ form.departing_at(class="form-control") }}
+        </div>
+        {{ form.csrf_token }}
+        <div class="form-group ">
+            <label class="control-label">Thời gian đến
+                <strong style="color: red">*</strong>
+            </label>
+            {{ form.arriving_at(class="form-control") }}
+        </div>
+        {{ form.csrf_token }}
+        <div class="form-group ">
+            <label class="control-label">Số hiệu máy bay
+                <strong style="color: red">*</strong>
+            </label>
+            {{ form.planes(class="form-control") }}
+        </div>
+        {{ form.csrf_token }}
+        <div class="form-group ">
+            <label class="control-label">Tuyến bay
+                <strong style="color: red">*</strong>
+            </label>
+            {{ form.airlines(class="form-control") }}
+        </div>
+        {{ form.csrf_token }}
+        <div class="form-group ">
+            <label class="control-label">Giá 1 vé/ghế
+                <strong style="color: red">*</strong>
+            </label>
+            {{ form.money(class="form-control") }}
+        </div>
+        {{ form.csrf_token }}
+        <div class="form-group ">
+            <label class="control-label">Hạng vé
+                <strong style="color: red">*</strong>
+            </label>
+            {{ form.rank(class="form-control") }}
+        </div>
+        {{ form.csrf_token }}
+        <div class="form-group ">
+            <label class="control-label">Thời gian bắt đầu dừng
+            </label>
+            {{ form.stop_time_begin(class="form-control") }}
+        </div>
+        {{ form.csrf_token }}
+        <div class="form-group ">
+            <label class="control-label">Thời gian tiếp tục bay
+            </label>
+            {{ form.stop_time_finish(class="form-control") }}
+        </div>
+        {{ form.csrf_token }}
+        <div class="form-group ">
+            <label class="control-label">Mô tả
+            </label>
+            {{ form.description(class="form-control") }}
+        </div>
+        {{ form.csrf_token }}
+        <div class="form-group ">
+            <label class="control-label">Sân bay dừng
+            </label>
+            {{ form.airport(class="form-control") }}
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10 submit-row">
+                <input type="submit" class="btn btn-primary" value="Lưu">
+                <a href="/admin/flights/" class="btn btn-danger" role="button">Hủy bỏ</a>
+            </div>
+        </div>
+    </fieldset>
+</form>
+{% else %}
+<h1 class="text-danger">Rất tiếc, bạn không có quyền thực thi trang này</h1>
+<h2>Quay về <a href="/" class="text-info">TRANG CHỦ</a> để ĐĂNG NHẬP</h2>
+{% endif %}
+
+{% endblock %}
+
+{% block tail_js %}
+{{ super() }}
+<script src="{{ url_for('static', filename='js/medium.js') }}"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+        crossorigin="anonymous"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
+      integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+{% endblock %}
