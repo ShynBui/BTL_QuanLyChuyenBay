@@ -3,6 +3,38 @@
 {% block body %}
 {{ super() }}
 
+{% block price %}
+{% if price: %}
+{% for p in price %}
+<table class="table table-hover table-bordered searchable">
+    <tr>
+        <td>
+            <b>Giá vé/ghế</b>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <div class="form-group row">
+                <label class="col-sm-3 col-form-label">Giá:</label>
+                <div class="col-sm-9">
+                    <input type="text" class="form-control"
+                           name="time-stop-begin" value="{{p.price * 1000}}" disabled>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-3 col-form-label">Hạng:</label>
+                <div class="col-sm-9">
+                    <input type="text" class="form-control"
+                           name="time-stop-finish" value="{{p.rank.name}}" disabled>
+                </div>
+            </div>
+        </td>
+    </tr>
+</table>
+{%endfor%}
+{% endif %}
+{% endblock%}
+
 {% block apm_details_table %}
 {% if apm_list: %}
 {% for apm in apm_list %}

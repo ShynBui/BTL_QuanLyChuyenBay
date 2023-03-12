@@ -1,8 +1,7 @@
-from decimal import Decimal
+from datetime import datetime
 from gettext import gettext
+from math import ceil
 
-import cloudinary.uploader
-from flask_admin.form import FormOpts
 from flask_admin.helpers import get_redirect_target
 from flask_admin.model.helpers import get_mdict_item_or_list
 from flask_wtf import FlaskForm
@@ -14,14 +13,12 @@ from saleapp import app, db, untils
 from flask_admin import Admin, BaseView, expose, AdminIndexView
 from flask_admin.contrib.sqla import ModelView
 from flask_login import current_user, logout_user
-from flask import request, redirect, jsonify, flash, session
-from datetime import datetime
+from flask import request, redirect, flash
 
 
 class AuthenticatedModelView(ModelView):
     def is_accessible(self):
         return current_user.is_authenticated and current_user.user_role == UserRole.ADMIN
-
 
 class LogoutView(BaseView):
     @expose('/')
@@ -171,8 +168,10 @@ class FlightManagementView(ModelView):
             Flight_AirportMedium.flight_id.__eq__(id)
         ).all()
 
+        price = PriceOfFlight.query.filter(PriceOfFlight.flight_id.__eq__(id))
+
         return self.render("admin/flight-details.html",
-                           model=model,
+                           model=model, price=price,
                            details_columns=self._details_columns,
                            get_value=self.get_detail_value,
                            apm_list=apm_list,
@@ -199,8 +198,8 @@ class TicketView(ModelView):
     }
 
 admin.add_view(FlightManagementView(Flight, db.session, name='Quản lý chuyến bay', endpoint='flights'))
-admin.add_view(Flight_Airportedium_View(Flight_AirportMedium, db.session, name='Trạm dừng', endpoint='stops'))
-admin.add_view(PriceView(PriceOfFlight, db.session, name='Quản lý giá', endpoint='prices'))
+admin.add_view(Flight_Airportedium_View(Flight_AirportMedium, db.session, name='Quản lý trạm dừng', endpoint='stops'))
+admin.add_view(TicketView(PriceOfFlight, db.session, name='Quản lý giá', endpoint='prices'))
 admin.add_view(TicketView(PlaneTicket, db.session, name='Quản lý vé', endpoint='tickets'))
 admin.add_view(ChatAdmin(name='ChatAdmin'))
 admin.add_view(LogoutView(name='Logout'))
