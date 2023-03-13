@@ -20,6 +20,10 @@ class AuthenticatedModelView(ModelView):
     def is_accessible(self):
         return current_user.is_authenticated and current_user.user_role == UserRole.ADMIN
 
+class AuthenticatedView(BaseView):
+    def is_accessible(self):
+        return current_user.is_authenticated and current_user.user_role == UserRole.ADMIN
+
 class LogoutView(BaseView):
     @expose('/')
     def index(self):
@@ -45,19 +49,24 @@ class ChatAdmin(BaseView):
 class MyAdminIndex(AdminIndexView):
     @expose('/')
     def index(self):
-        total = 0.0
-        airline_name = request.args.get('airline_name')
-        date = request.args.get('month')
-        statistics = untils.statistic_revenue_follow_month(airline_name=airline_name,
-                                                          date=date)
-        for s in statistics:
-            if s[1]:
-                total = total + s[1]
-        return self.render('admin/index.html',statistics=statistics, total=total)
+        return self.render('admin/index.html')
 
 
 admin = Admin(app=app, name='QUẢN TRỊ MÁY BAY', template_mode='bootstrap4',
               index_view=MyAdminIndex())
+
+class StatsView(AuthenticatedView):
+    @expose('/')
+    def index(self):
+        total = 0.0
+        airline_name = request.args.get('airline_name')
+        date = request.args.get('month')
+        statistics = untils.statistic_revenue_follow_month(airline_name=airline_name,
+                                                           date=date)
+        for s in statistics:
+            if s[1]:
+                total = total + s[1]
+        return self.render('admin/statistic.html', statistics=statistics, total=total)
 
 class ModelView(AuthenticatedModelView):
     column_display_pk = True
@@ -202,4 +211,5 @@ admin.add_view(Flight_Airportedium_View(Flight_AirportMedium, db.session, name='
 admin.add_view(TicketView(PriceOfFlight, db.session, name='Quản lý giá', endpoint='prices'))
 admin.add_view(TicketView(PlaneTicket, db.session, name='Quản lý vé', endpoint='tickets'))
 admin.add_view(ChatAdmin(name='ChatAdmin'))
+admin.add_view(StatsView(name='Thống kê'))
 admin.add_view(LogoutView(name='Logout'))

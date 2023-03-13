@@ -2,10 +2,13 @@ import hashlib
 
 from sqlalchemy import DECIMAL, Column, Integer, String, Float, Boolean, DateTime, ForeignKey, Text, Enum
 from sqlalchemy.orm import relationship, backref
-from saleapp import db, app
+from saleapp import db, app, decoding, encoding
 from datetime import datetime
 from enum import Enum as UserEnum
 from flask_login import UserMixin
+
+from saleapp.decoding import decoding_no1, decoding_no2
+from saleapp.encoding import encoding_no1, encoding_no2
 
 
 class BaseModel(db.Model):
@@ -112,7 +115,7 @@ class Airline(BaseModel):
                            , backref='airline', lazy=True, passive_deletes=True, cascade="all, delete")
 
     def __str__(self):
-        return str(f'{self.departing_airport.name} - {self.arriving_airport.name}')
+        return str(f'{self.departing_airport.code} - {self.arriving_airport.code}')
 
 
 class Flight(BaseModel):
@@ -174,7 +177,7 @@ class Room(db.Model):
 class Message(db.Model):
     __tablename__ = 'message'
 
-    id = id = Column(Integer, primary_key=True, autoincrement=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
     room_id = Column(Integer, ForeignKey(Room.id), nullable=False, primary_key=True)
     user_id = Column(Integer, ForeignKey(User.id), nullable=False, primary_key=True)
 
@@ -200,6 +203,28 @@ if __name__ == '__main__':
         db.session.add_all([u1, u2, u3])
         db.session.commit()
 
+        room = Room(name="Room của " + u1.name.strip())
+
+        db.session.add(room)
+
+        db.session.commit()
+
+        message = Message(room_id=room.id, user_id=u1.id)
+
+        db.session.add(message)
+
+        db.session.commit()
+        room = Room(name="Room của " + u3.name.strip())
+
+        db.session.add(room)
+
+        db.session.commit()
+
+        message = Message(room_id=room.id, user_id=u3.id)
+
+        db.session.add(message)
+
+
         a1 = Airplane(name="A001")
         a2 = Airplane(name="A002")
         a3 = Airplane(name="A003")
@@ -207,7 +232,7 @@ if __name__ == '__main__':
         a5 = Airplane(name="A005")
         db.session.add_all([a1, a2, a3, a4, a5])
 
-        ap1 = Airport(name="Sân bay QT Nội Bài", code="HAN", location="Hà Nội")
+        ap1 = Airport(name="Sân bay QT Nội Bài", code=("HAN"), location="Hà Nội")
         ap2 = Airport(name="Sân bay QT Tân Sơn Nhất", code="SGN", location="Hồ Chí Minh")
         ap3 = Airport(name="Sân bay QT Đà Nẵng", code="DAD", location="Đà Nẵng")
         ap4 = Airport(name="Sân bay QT Phú Quốc", code="PQC", location="Kiên Giang")
@@ -248,18 +273,18 @@ if __name__ == '__main__':
 
         # Khởi tạo flight
         f1 = Flight(departing_at="2023-03-03 05:00", arriving_at="2023-03-03 07:15", airplane_id=1, airline_id=2)
-        p11 = PriceOfFlight(rank_id=1, flight=f1, price="6000")
-        p12 = PriceOfFlight(rank_id=2, flight=f1, price="1900")
+        p11 = PriceOfFlight(rank_id=1, flight=f1, price="6000".encode())
+        p12 = PriceOfFlight(rank_id=2, flight=f1, price="1900".encode())
         db.session.add_all([f1, p11, p12])
 
         f2 = Flight(departing_at="2023-03-03 07:00", arriving_at="2023-03-03 09:15", airplane_id=2, airline_id=4)
-        p21 = PriceOfFlight(rank_id=1, flight=f2, price="6000")
-        p22 = PriceOfFlight(rank_id=2, flight=f2, price="2300")
+        p21 = PriceOfFlight(rank_id=1, flight=f2, price="6000".encode())
+        p22 = PriceOfFlight(rank_id=2, flight=f2, price="2300".encode())
         db.session.add_all([f2, p21, p22])
 
         f3 = Flight(departing_at="2023-03-03 11:45", arriving_at="2023-03-03 19:40", airplane_id=3, airline_id=4)
-        p31 = PriceOfFlight(rank_id=1, flight=f3, price="9000")
-        p32 = PriceOfFlight(rank_id=2, flight=f3, price="2600")
+        p31 = PriceOfFlight(rank_id=1, flight=f3, price="9000".encode())
+        p32 = PriceOfFlight(rank_id=2, flight=f3, price="2600".encode())
         fa31 = Flight_AirportMedium(stop_time_begin="2023-03-03 13:35", stop_time_finish="2023-03-03 18:45",
                                     airport_id=3, flight=f3)
         fa32 = Flight_AirportMedium(stop_time_begin="2023-03-03 13:35", stop_time_finish="2023-03-03 18:45",
