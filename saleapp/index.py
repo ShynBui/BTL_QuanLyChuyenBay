@@ -1,7 +1,7 @@
 import math
 from datetime import datetime
 from flask import render_template, request, redirect, session, jsonify, url_for
-from saleapp import app, admin, login, untils, socketio, dao, utils
+from saleapp import app, admin, login, untils, socketio, dao, utils, sendmail
 from saleapp.models import UserRole
 from flask_login import login_user, logout_user, login_required, current_user
 import cloudinary.uploader
@@ -411,6 +411,17 @@ def detail_order(order_id):
 
     ords = dao.get_order(user_id=id, order_id=order_id)
     return render_template('tickets.html', tickets=ords.tickets)
+
+
+@app.route('/api/otp', methods=["POST"])
+def send_otp():
+    data = request.json
+    email = data["email"]
+    name = data["name"]
+    otp = utils.generateOTP()
+    sendmail.send(name, email, otp)
+
+    return jsonify({"otp": otp})
 
 
 if __name__ == '__main__':
