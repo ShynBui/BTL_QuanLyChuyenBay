@@ -22,7 +22,6 @@
         <div class="form-floating mb-3 mt-3 sub__type" >
         <input type="text" class="form-control" required id="name" placeholder="Nhập họ tên" name="name">
         <label for="name">Họ tên</label>
-
     </div>
    </div>
 
@@ -69,20 +68,73 @@
         <input type="text" class="form-control" id="diachi" name="diachi" required>
         <label for="diachi">Địa chỉ</label>
     </div>
-   </div>
+       
+    <script>
+        var otp;
+        function sendOTP() {
+            var form = document.querySelector("#register-form");
+            var name = document.querySelector("#name").value;
+            var email = document.querySelector("#email").value;
+            if (form.checkValidity())
+            {
+                fetch('/api/otp', {
+                    method: "POST",
+                    body: JSON.stringify({
+                        "email": email,
+                        "name": name
+                    }),
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                }).then(res => res.json()).then((data) => {
+                    otp = data["otp"]
+                    var otpBox = document.querySelector("#otp-box");
+                    document.querySelector("#btn-send-otp").value = "Gửi lại mã";
+                    otpBox.classList.remove("d-none");
+                    var inputs = document.querySelectorAll(".form-control")
+                    inputs.forEach(function(i) {
+                        if(i.name != "otp")
+                            i.disabled = true
+                    })
+                    var otpInput = document.querySelector("#otp");
+                    otpInput.required = true
+                })
+            }
+            else
+            {
+                alert("Vui lòng điền đầy đủ thông tin");
+            }
+        }
 
+        function checkOTP()
+        {
+            var cusOTP = document.querySelector("#otp").value;
+            if (cusOTP == otp)
+            {
 
-
-
-
-
-
-
-
-
-    <div class="btn__submit">
-        <input type="submit" value="Đăng ký" class="btn__sub "/>
+                alert("Mã OTP đúng, hãy bấm đăng ký để tiếp tục")
+                document.querySelector("#btnSubmit").disabled = false;
+            }
+            else
+            {
+                alert("Mã OTP của bạn vừa nhập không đúng")
+                otpBox.classList.add("d-none");
+            }
+        }
+    </script>
+    <div>
+        <input type="button" id="btn-send-otp"  onclick="sendOTP()" value="Xác nhận" class="btn btn-danger"/>
     </div>
+    <div class="d-none d-flex" id="otp-box">
+        <div class="form-floating mt-3 mb-3">
+            <input type="text" class="form-control" onchange="checkOTP()" id="otp" name="otp">
+            <label for="otp">Mã otp</label>
+        </div>
+        <div>
+            <input id="btnSubmit" type="submit" disabled value="Đăng ký" class="btn btn-danger"/>
+        </div>
+    </div>
+
 </form>
 <br>
 <br>
