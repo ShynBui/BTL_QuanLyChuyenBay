@@ -1,3 +1,4 @@
+
 from saleapp.securable_data import decode_data, encode_data,vigenere_key,caesar_key
 
 # Thuat giai Caesar
@@ -26,6 +27,7 @@ def encoding_no2 (plaintext):
     ciphertext = ""
     index=0
 
+
     encode = encode_data()
     decode = decode_data()
 
@@ -44,6 +46,7 @@ def encoding_no2 (plaintext):
 
     for i in range(len(plainindex_range)):
         index = (plainindex_range[i]+keyindex_rang[i])%n
+
         ciphertext += encode[index]
 
     return ciphertext

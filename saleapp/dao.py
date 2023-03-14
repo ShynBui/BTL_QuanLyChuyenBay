@@ -1,9 +1,11 @@
 from flask_login import current_user
 
-from saleapp import app, db
+from saleapp import app, db, encoding, decoding
 from sqlalchemy import or_, and_, not_, func, extract
 from sqlalchemy.orm import aliased
 from saleapp.models import *
+
+key = 7
 
 
 def get_flights(FROM, TO, date):
@@ -58,6 +60,7 @@ def get_price(flight_id, rank_id):
         and_(PriceOfFlight.flight_id.__eq__(flight_id), PriceOfFlight.rank_id.__eq__(rank_id))).first()
 
 
+
 def save_order(cart, total_price):
     ord = PurchaseOrder(total=total_price, user=current_user)
     db.session.add(ord)
@@ -68,10 +71,11 @@ def save_order(cart, total_price):
                             flight_id=cart['flight_id'])
             db.session.add(t)
         else:
-            new_cus = Customer(serial=cart['seats'][c]['customer']['serial'], name=cart['seats'][c]['customer']['name'],
+            new_cus = Customer(serial=encoding.encoding_no1(cart['seats'][c]['customer']['serial'], key),
+                               name=encoding.encoding_no1(cart['seats'][c]['customer']['name'], key),
                                gender=cart['seats'][c]['customer']['gender'], dob=cart['seats'][c]['customer']['dob'],
-                               email=cart['seats'][c]['customer']['email'],
-                               phone=cart['seats'][c]['customer']['phone'], )
+                               email=encoding.encoding_no1(['seats'][c]['customer']['email'], key),
+                               phone=encoding.encoding_no1(['seats'][c]['customer']['phone'], key))
             db.session.add(new_cus)
             t = PlaneTicket(subTotal=cart['seats'][c]['price'], seat_id=c, customer=new_cus, order=ord,
                             flight_id=cart['flight_id'])
@@ -80,7 +84,7 @@ def save_order(cart, total_price):
 
 
 def get_customer(serial):
-    cus = Customer.query.filter(Customer.serial.__eq__(serial)).first()
+    cus = Customer.query.filter(Customer.serial.__eq__(encoding.encoding_no1(serial,key)).first())
     return cus
 
 

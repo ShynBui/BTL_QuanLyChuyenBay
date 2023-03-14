@@ -1,3 +1,4 @@
+
 from saleapp.securable_data import decode_data, encode_data, caesar_key,vigenere_key
 
 # Thuat giai Caeser
@@ -21,6 +22,7 @@ def decoding_no1 (ciphertext):
     return plaintext
 
 # Thuat ma Vigener
+
 def decoding_no2 (ciphertext):
     n = 280
     cipherindex_range = []
@@ -48,6 +50,7 @@ def decoding_no2 (ciphertext):
         index = (cipherindex_range[i]-keyindex_rang[i])
         while index < 0:
             index += n
+
         plaintext += encode[index]
 
     return plaintext

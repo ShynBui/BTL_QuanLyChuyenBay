@@ -7,6 +7,12 @@
 
 
 
+<div class="mid__chat">
+    <path d="M20.685.12c-2.229.424-4.278 1.914-6.181 3.403L5.4 10.94c-2.026 2.291-5.434.62-5.4-2.648V.12h20.684z"></path>
+    {%for i in range(n)%}
+    {%if current_user.id == user_id[i]%}
+
+
 {% block header %}
 <div class="main">
 <header style="height: 87px;">
@@ -168,6 +174,12 @@
  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 {%endblock%}
 
+{% block css %}
+<link href="{{ url_for('static', filename='css/chatroom.css') }}"
+      rel="stylesheet"/>
+ <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+{%endblock%}
+
 {%block script %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.6.1/socket.io.js"></script>
 
@@ -248,6 +260,7 @@
         {
             code: '&#128529',
 
+
         },
         {
             code: '&#128530',
@@ -263,8 +276,6 @@
         }
 
     ],
-
-
 
 
     render: function(){
@@ -290,6 +301,7 @@ emojis.start();
         const album_emojis = $('.album_emoji');
         const emoji_icon = $('.emoji');
         const mid_chat = $('.mid__chat');
+
         mid_chat.scrollTop = mid_chat.scrollHeight;
 
         mid_chat.addEventListener('click', onClickMidChat)
@@ -398,8 +410,6 @@ emojis.start();
             newNode.innerHTML = data['username'] + ' has join the room'
             document.getElementById('messages').appendChild(newNode);
         });
-
-
 
 
 </script>

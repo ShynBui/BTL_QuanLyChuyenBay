@@ -16,6 +16,7 @@
     <h4>{{err_msg}}</h4>
 </div>
 {%endif%}
+
 <form method="post" enctype="multipart/form-data" action="/register">
    <div class="sub" style="display:flex">
        <h1 class="sub__title">Tên khách hàng</h1>
@@ -68,7 +69,7 @@
         <input type="text" class="form-control" id="diachi" name="diachi" required>
         <label for="diachi">Địa chỉ</label>
     </div>
-       
+
     <script>
         var otp;
         function sendOTP() {
@@ -124,6 +125,7 @@
     </script>
     <div>
         <input type="button" id="btn-send-otp"  onclick="sendOTP()" value="Xác nhận" class="btn btn-danger"/>
+
     </div>
     <div class="d-none d-flex" id="otp-box">
         <div class="form-floating mt-3 mb-3">

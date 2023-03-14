@@ -140,3 +140,8 @@ function showBarCode(id) {
       displayValue: false
     });
 }
+
+//button_click.addEventListener("click", onClickButton);
+//function onClickButton(){ta
+//    console.log(123);
+//}
