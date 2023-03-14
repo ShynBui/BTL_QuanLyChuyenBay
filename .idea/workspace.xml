@@ -4,20 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="26c10ccc-2dca-4b76-8c21-03fd3af9d9f2" name="Changes" comment="UPDATE requirements.txt">
+    <list default="true" id="26c10ccc-2dca-4b76-8c21-03fd3af9d9f2" name="Changes" comment="UPDATE all">
       <change beforePath="$PROJECT_DIR$/.idea/BTL_QuanLyChuyenBay.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/BTL_QuanLyChuyenBay.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/saleapp/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/saleapp/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/saleapp/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/saleapp/admin.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/saleapp/index.py" beforeDir="false" afterPath="$PROJECT_DIR$/saleapp/index.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/saleapp/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/saleapp/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/saleapp/static/js/fillValues.js" beforeDir="false" afterPath="$PROJECT_DIR$/saleapp/static/js/fillValues.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/saleapp/templates/admin/create.html" beforeDir="false" afterPath="$PROJECT_DIR$/saleapp/templates/admin/create.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/saleapp/templates/admin/statistic.html" beforeDir="false" afterPath="$PROJECT_DIR$/saleapp/templates/admin/statistic.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/saleapp/templates/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/saleapp/templates/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/saleapp/templates/register.html" beforeDir="false" afterPath="$PROJECT_DIR$/saleapp/templates/register.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/saleapp/untils.py" beforeDir="false" afterPath="$PROJECT_DIR$/saleapp/untils.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -42,13 +31,13 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/Hi/Documents/ATHTTT/BTL_QuanLyChuyenBay&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "last_opened_file_path": "D:/ATHTTT/BTL_QuanLyChuyenBay"
   }
-}</component>
+}]]></component>
   <component name="RunManager" selected="Python.index">
     <configuration name="index" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="BTL_QuanLyChuyenBay" />
@@ -130,6 +119,21 @@
       <option name="presentableId" value="Default" />
       <updated>1678700745525</updated>
     </task>
+    <task id="LOCAL-00001" summary="UPDATE admin">
+      <created>1678797061319</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1678797061331</updated>
+    </task>
+    <task id="LOCAL-00002" summary="UPDATE all">
+      <created>1678801429088</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1678801429088</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -143,15 +147,9 @@
       </map>
     </option>
   </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/saleapp/untils.py</url>
-          <line>123</line>
-          <option name="timeStamp" value="4" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="UPDATE admin" />
+    <MESSAGE value="UPDATE all" />
+    <option name="LAST_COMMIT_MESSAGE" value="UPDATE all" />
   </component>
 </project>
