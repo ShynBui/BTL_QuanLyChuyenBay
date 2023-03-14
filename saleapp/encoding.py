@@ -1,54 +1,41 @@
-def create_data(n, ascii_code, data):
-    for i in range(n):
-        data.append(chr(ascii_code))
-        ascii_code += 1
 
-    return data
+from saleapp.securable_data import decode_data, encode_data,vigenere_key,caesar_key
 
-# Thuat giai Caeser
-def encoding_no1 (plaintext, k):
-    n = 95
-    data = []
+# Thuat giai Caesar
+def encoding_no1 (plaintext):
+    n = 280
     plainindex_range = []
     ciphertext = ""
 
-    create_data(n, 32, data)
-
-
-# H  e   l   p    M   e
-# 40 69 74  80   45   69
+    encode = encode_data()
+    decode = decode_data()
 
     for p in plaintext:
-        for d in range(len(data)):
-            if(p == data[d]):
-                plainindex_range.append(d)
+        plainindex_range.append(decode[p])
 
     for p in plainindex_range:
-        index = (p+k)%n
-        ciphertext += data[index]
+        index = (p+caesar_key)%n
+        ciphertext += encode[index]
 
     return ciphertext
 
-#Thuat giai Vigener
-def encoding_no2 (plaintext, key):
-    n = 95
-    data = []
+# Thuat giai Vigenere
+def encoding_no2 (plaintext):
+    n = 280
     plainindex_range = []
     keyindex_rang = []
     ciphertext = ""
     index=0
 
-    create_data(n, 32, data)
+
+    encode = encode_data()
+    decode = decode_data()
 
     for p in plaintext:
-        for d in range(len(data)):
-            if(p == data[d]):
-                plainindex_range.append(d)
+        plainindex_range.append(decode[p])
 
-    for k in key:
-        for d in range(len(data)):
-            if(k == data[d]):
-                keyindex_rang.append(d)
+    for k in vigenere_key:
+        keyindex_rang.append(decode[k])
 
     while len(plainindex_range) != len(keyindex_rang):
         if len(plainindex_range) > len(keyindex_rang):
@@ -59,6 +46,7 @@ def encoding_no2 (plaintext, key):
 
     for i in range(len(plainindex_range)):
         index = (plainindex_range[i]+keyindex_rang[i])%n
-        ciphertext += data[index]
+
+        ciphertext += encode[index]
 
     return ciphertext

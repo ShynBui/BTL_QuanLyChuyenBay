@@ -42,10 +42,16 @@ def news():
 
 @app.route("/chatroom")
 def chat_room():
+    if current_user.is_authenticated:
+        pass
+    else:
+        return redirect(url_for('user_signin'))
+
+
     user_name = current_user.name
     room = untils.get_chatroom_by_user_id(id=current_user.id)
 
-    # print(room.room_id)
+    print(room.room_id)
 
     user_send = [untils.get_user_by_id(x.user_id).name for x in untils.load_message(room.room_id)]
 
@@ -64,9 +70,11 @@ def chat_room():
     if user_name and room:
 
         print(untils.load_message(room.room_id)[0].content)
-        return render_template('chatroom.html', user_name=user_name, room=room.room_id, name= current_user.name,
-                               message=untils.load_message(room.room_id), room_id = int(room.room_id),
-                               user_send= user_send, n=len(user_send), user_image=user_image, user_id=user_id, room_name = untils.get_chatroom_by_id(room.room_id),
+
+        return render_template('chatroom.html', user_name=user_name, room=room.room_id, name=current_user.name,
+                               message=untils.load_message(room.room_id), room_id=int(room.room_id),
+                               user_send=user_send, n=len(user_send), user_image=user_image, user_id=user_id,
+                               room_name=untils.get_chatroom_by_id(room.room_id),
                                host_avatar=host_avatar);
     else:
         return redirect(url_for('home'))
@@ -81,15 +89,24 @@ def chat_room_admin(room_id):
 
         user_send = [untils.get_user_by_id(x.user_id).name for x in untils.load_message(room.room_id)]
 
+        user_image = [untils.get_user_by_id(x.user_id).avatar for x in untils.load_message(room.room_id)]
+
+        user_id = [x.user_id for x in untils.load_message(room.room_id)]
+
         user_send.pop(0)
+        user_image.pop(0)
+        user_id.pop(0)
+
+        host_avatar = untils.get_host_room_avatar(room.room_id);
 
         if user_name and room:
-            print(untils.load_message(room.room_id)[0].content)
             return render_template('chatroom.html', user_name=user_name, room=room.room_id, name=current_user.name,
                                    message=untils.load_message(room.room_id), room_id=int(room.room_id),
-                                   user_send=user_send, n=len(user_send))
+                                   user_send=user_send, n=len(user_send), user_image=user_image, user_id=user_id,
+                                   room_name=untils.get_chatroom_by_id(room.room_id),
+                                   host_avatar=host_avatar);
 
-    return redirect(url_for('home'))
+    return redirect(url_for('home'));
 
 
 @socketio.on('send_message')
@@ -182,7 +199,7 @@ def user_signin():
     return render_template('login.html', err_msg=err_msg)
 
 
-@app.route('/admin-login', methods=['post'])
+@app.route('/admin-login', methods=["POST", "GET"])
 def signin_admin():
     username = request.form.get('username')
     password = request.form.get('password')

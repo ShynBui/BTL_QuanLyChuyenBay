@@ -2,13 +2,19 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d8f41d34-1df4-47d4-a5af-ee8cea29dec4" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/saleapp/dao.py" beforeDir="false" afterPath="$PROJECT_DIR$/saleapp/dao.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/saleapp/decoding.py" beforeDir="false" afterPath="$PROJECT_DIR$/saleapp/decoding.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/saleapp/encoding.py" beforeDir="false" afterPath="$PROJECT_DIR$/saleapp/encoding.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/saleapp/static/js/buyticket.js" beforeDir="false" afterPath="$PROJECT_DIR$/saleapp/static/js/buyticket.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/saleapp/templates/buyticket.html" beforeDir="false" afterPath="$PROJECT_DIR$/saleapp/templates/buyticket.html" afterDir="false" />
+
+      <change afterPath="$PROJECT_DIR$/saleapp/sendmail.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/BTL_QuanLyBanSach.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/BTL_QuanLyChuyenBay.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/BTL_QuanLyChuyenBay.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/saleapp/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/saleapp/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/saleapp/index.py" beforeDir="false" afterPath="$PROJECT_DIR$/saleapp/index.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/saleapp/templates/buyticket2.html" beforeDir="false" afterPath="$PROJECT_DIR$/saleapp/templates/buyticket2.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/saleapp/templates/register.html" beforeDir="false" afterPath="$PROJECT_DIR$/saleapp/templates/register.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/saleapp/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/saleapp/utils.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -33,13 +39,14 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/Hi/Documents/ATHTTT/BTL_QuanLyChuyenBay&quot;
+
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "last_opened_file_path": "C:/Users/Hi/Documents/ATHTTT/BTL_QuanLyChuyenBay"
   }
-}</component>
+}]]></component>
   <component name="RunManager" selected="Python.index">
     <configuration name="index" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="BTL_QuanLyChuyenBay" />
