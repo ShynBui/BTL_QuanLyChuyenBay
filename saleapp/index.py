@@ -1,7 +1,7 @@
 import math
 from datetime import datetime
 from flask import render_template, request, redirect, session, jsonify, url_for
-from saleapp import app, admin, login, untils, socketio, dao, utils, sendmail
+from saleapp import app, admin, login, untils, socketio, dao, utils, sendmail, decoding
 from saleapp.models import UserRole
 from flask_login import login_user, logout_user, login_required, current_user
 import cloudinary.uploader
@@ -410,6 +410,9 @@ def detail_order(order_id):
     id = current_user.id
 
     ords = dao.get_order(user_id=id, order_id=order_id)
+    for ticket in ords.tickets:
+        ticket.customer.name = decoding.decoding_no1(ticket.customer.name)
+        ticket.customer.serial = decoding.decoding_no1(ticket.customer.serial)
     return render_template('tickets.html', tickets=ords.tickets)
 
 
