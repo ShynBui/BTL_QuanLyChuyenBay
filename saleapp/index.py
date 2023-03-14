@@ -1,7 +1,7 @@
 import math
 from datetime import datetime
 from flask import render_template, request, redirect, session, jsonify, url_for
-from saleapp import app, admin, login, untils, socketio, dao, utils, sendmail
+from saleapp import app, admin, login, untils, socketio, dao, utils, sendmail, decoding
 from saleapp.models import UserRole
 from flask_login import login_user, logout_user, login_required, current_user
 import cloudinary.uploader
@@ -70,6 +70,7 @@ def chat_room():
     if user_name and room:
 
         print(untils.load_message(room.room_id)[0].content)
+
         return render_template('chatroom.html', user_name=user_name, room=room.room_id, name=current_user.name,
                                message=untils.load_message(room.room_id), room_id=int(room.room_id),
                                user_send=user_send, n=len(user_send), user_image=user_image, user_id=user_id,
@@ -410,6 +411,9 @@ def detail_order(order_id):
     id = current_user.id
 
     ords = dao.get_order(user_id=id, order_id=order_id)
+    for ticket in ords.tickets:
+        ticket.customer.name = decoding.decoding_no1(ticket.customer.name)
+        ticket.customer.serial = decoding.decoding_no1(ticket.customer.serial)
     return render_template('tickets.html', tickets=ords.tickets)
 
 

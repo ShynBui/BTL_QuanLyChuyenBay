@@ -174,7 +174,7 @@ class Room(db.Model):
 class Message(db.Model):
     __tablename__ = 'message'
 
-    id = Column(Integer, primary_key=True, autoincrement=True)
+    id = id = Column(Integer, primary_key=True, autoincrement=True)
     room_id = Column(Integer, ForeignKey(Room.id), nullable=False, primary_key=True)
     user_id = Column(Integer, ForeignKey(User.id), nullable=False, primary_key=True)
 
@@ -199,28 +199,6 @@ if __name__ == '__main__':
                   user_role=UserRole.ADMIN)
         db.session.add_all([u1, u2, u3])
         db.session.commit()
-
-        room = Room(name="Room của " + u1.name.strip())
-
-        db.session.add(room)
-
-        db.session.commit()
-
-        message = Message(room_id=room.id, user_id=u1.id)
-
-        db.session.add(message)
-
-        db.session.commit()
-        room = Room(name="Room của " + u3.name.strip())
-
-        db.session.add(room)
-
-        db.session.commit()
-
-        message = Message(room_id=room.id, user_id=u3.id)
-
-        db.session.add(message)
-
 
         a1 = Airplane(name="A001")
         a2 = Airplane(name="A002")
