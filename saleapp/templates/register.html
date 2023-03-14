@@ -15,7 +15,7 @@
     <h4>{{err_msg}}</h4>
 </div>
 {%endif%}
-<form method="post" id="register-form" enctype="multipart/form-data" action="{{url_for('user_signin')}}">
+<form method="post" id="register-form" enctype="multipart/form-data" action="/register">
     <div class="form-floating mb-3 mt-3">
         <input type="text" class="form-control" required id="name" placeholder="Nhập họ tên" name="name">
         <label for="name">Họ tên</label>
@@ -107,7 +107,7 @@
     </div>
     <div class="d-none d-flex" id="otp-box">
         <div class="form-floating mt-3 mb-3">
-            <input type="text" class="form-control" onchange="checkOTP()" id="otp" name="otp">
+            <input type="text" class="" onchange="checkOTP()" id="otp" >
             <label for="otp">Mã otp</label>
         </div>
         <div>
