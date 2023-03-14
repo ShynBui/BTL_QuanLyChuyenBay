@@ -1,47 +1,41 @@
-from saleapp import encoding
+from saleapp.securable_data import create_decode,create_encode,vigenere_key,caesar_key
 
 # Thuat giai Caeser
-def decoding_no1 (ciphertext, k = 1):
-    n = 95
-    data = []
+def decoding_no1 (ciphertext):
+    n = 280
     cipherindex_range = []
     plaintext = ""
 
-    encoding.create_data(n, 32, data)
+    decode = create_decode()
+    encode = create_encode()
 
-    for i in range(len(ciphertext)):
-        for d in range(len(data)):
-            if(ciphertext[i] == data[d]):
-                cipherindex_range.append(d)
+    for i in ciphertext:
+        cipherindex_range.append(decode[i])
 
     for c in cipherindex_range:
-        index = (c-k)
+        index = (c-caesar_key)
         while index < 0:
             index += n
-        plaintext += data[index]
+        plaintext += encode[index]
 
     return plaintext
 
 # Thuat ma Vigener
-def decoding_no2 (ciphertext, key):
-    n = 95
-    data = []
+def decoding_no2 (ciphertext):
+    n = 280
     cipherindex_range = []
     keyindex_rang = []
     plaintext = ""
     index=0
 
-    encoding.create_data(n, 32, data)
+    decode = create_decode()
+    encode = create_encode()
 
     for c in ciphertext:
-        for d in range(len(data)):
-            if(c == data[d]):
-                cipherindex_range.append(d)
+        cipherindex_range.append(decode[c])
 
-    for k in key:
-        for d in range(len(data)):
-            if(k == data[d]):
-                keyindex_rang.append(d)
+    for k in vigenere_key:
+        keyindex_rang.append(decode[k])
 
     while len(cipherindex_range) != len(keyindex_rang):
         if len(cipherindex_range) > len(keyindex_rang):
@@ -54,6 +48,6 @@ def decoding_no2 (ciphertext, key):
         index = (cipherindex_range[i]-keyindex_rang[i])
         while index < 0:
             index += n
-        plaintext += data[index]
+        plaintext += encode[index]
 
     return plaintext
