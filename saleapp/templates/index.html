@@ -78,8 +78,8 @@
     <div class="mx-auto row">
         {% for f in range(len_of_flights) %}
         <div class="card text-dark bg-light mb-3" style="max-width: 24rem; margin-left: 1%;">
-            <div class="card-header"><b>Từ:</b> {{ data_fill[f].airline.departing_airport.name}}</div>
-            <div class="card-header"><b>Đến:</b> {{ data_fill[f].airline.arriving_airport.name}}</div>
+            <div class="card-header"><b>Từ:</b> {{ data_fill[f].airline.departing_airport.location}}</div>
+            <div class="card-header"><b>Đến:</b> {{ data_fill[f].airline.arriving_airport.location}}</div>
             <div class="card-body">
                 <h5 class="card-title h5 text-primary">{{ data_fill[f].id }}</h5>
                 <p class="card-text"><b><i>Thời gian khởi hành:</i></b> {{data_fill[f].departing_at}}</p>

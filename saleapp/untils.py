@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from saleapp.models import User, UserRole, Room, Message, Airport, Flight, PriceOfFlight, Airline, PlaneTicket, \
-    Flight_AirportMedium, Rank
+    Flight_AirportMedium, Rank, PurchaseOrder
 from flask_login import current_user
 from sqlalchemy import func, and_, desc
 from saleapp import app, db
@@ -120,17 +120,22 @@ def load_flights():
 def get_prices_of_flight(flight_id):
     return PriceOfFlight.query.filter(PriceOfFlight.flight_id.__eq__(flight_id)).all()
 
-def statistic_revenue_follow_month(airline_name=None, date=None):
-    stats = db.session.query(Airline.id, func.sum(PlaneTicket.subTotal), func.count(Flight.id.distinct())) \
+def statistic_revenue_follow_month(from_airport=None,to_airport=None, date=None):
+    stats = db.session.query(Airline.id, func.sum(PlaneTicket.subTotal), func.count(Flight.id.distinct()),
+                             func.count(PlaneTicket.id)) \
         .join(Flight, Flight.airline_id.__eq__(Airline.id), isouter=True) \
         .join(PlaneTicket, PlaneTicket.flight_id.__eq__(Flight.id), isouter=True) \
+        .join(PurchaseOrder, PurchaseOrder.id.__eq__(PlaneTicket.order_id), isouter=True)\
         .group_by(Airline.id)
 
-    if airline_name and date:
+    if from_airport and to_airport and date:
+        fa = Airport.query.filter(Airport.location.__eq__(from_airport)).first()
+        ta = Airport.query.filter(Airport.location.__eq__(to_airport)).first()
         date = datetime.strptime(date, "%Y-%m")
-        stats = stats.filter(Airline.departing_airport_id.contains(airline_name))
-        stats = stats.filter(extract('year', PlaneTicket.date) == date.year,
-                             extract('month', PlaneTicket.date) == date.month)
+        stats = stats.filter(Airline.departing_airport_id == fa.id,
+                             Airline.arriving_airport_id == ta.id)
+        stats = stats.filter(extract('year', PurchaseOrder.orderDate) == date.year,
+                             extract('month', PurchaseOrder.orderDate) == date.month)
 
     return stats.all()
 
@@ -143,6 +148,12 @@ def get_apm_by_flight_id(flight_id):
     return Flight_AirportMedium.query.filter(
         Flight_AirportMedium.flight_id.__eq__(flight_id)
     ).all()
+
+
+def del_price(price_id):
+    p = PriceOfFlight.query.filter(PriceOfFlight.id.__eq__(price_id))
+    db.session.delete(p)
+    db.session.commit()
 
 
 def del_apm(flight_id, airport_id):
@@ -308,7 +319,7 @@ def update_apm(model, stop_time_begin, stop_time_finish, description, flight_id,
 
 
 def save_price(rank, flight_id, price):
-    r = Rank.query.filter(Rank.name.__eq__(rank)).first()
+    r = Rank.query.filter(Rank.id.__eq__(rank)).first()
     p = PriceOfFlight(rank_id=r.id, flight_id=flight_id, price=price)
     db.session.add(p)
     db.session.commit()

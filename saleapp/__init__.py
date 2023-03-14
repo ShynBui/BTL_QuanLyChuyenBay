@@ -8,7 +8,7 @@ from flask_socketio import SocketIO
 app = Flask(__name__)
 
 app.secret_key = '689567gh$^^&*#%^&*^&%^*DFGH^&*&*^*'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:%s@localhost/quanlymaybay?charset=utf8mb4' % quote("Admin@123")
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:%s@localhost/quanlymaybay?charset=utf8mb4' % quote("10102002")
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 
 
