@@ -5,8 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="26c10ccc-2dca-4b76-8c21-03fd3af9d9f2" name="Changes" comment="UPDATE all">
-      <change beforePath="$PROJECT_DIR$/.idea/BTL_QuanLyChuyenBay.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/BTL_QuanLyChuyenBay.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/saleapp/decoding.py" beforeDir="false" afterPath="$PROJECT_DIR$/saleapp/decoding.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/saleapp/encoding.py" beforeDir="false" afterPath="$PROJECT_DIR$/saleapp/encoding.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/saleapp/securable_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/saleapp/securable_data.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -35,7 +37,8 @@
   "keyToString": {
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "last_opened_file_path": "D:/ATHTTT/BTL_QuanLyChuyenBay"
+    "last_opened_file_path": "D:/ATHTTT/BTL_QuanLyChuyenBay",
+    "settings.editor.selected.configurable": "configurable.group.project"
   }
 }]]></component>
   <component name="RunManager" selected="Python.index">
