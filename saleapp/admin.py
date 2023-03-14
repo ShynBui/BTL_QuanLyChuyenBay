@@ -20,6 +20,10 @@ class AuthenticatedModelView(ModelView):
     def is_accessible(self):
         return current_user.is_authenticated and current_user.user_role == UserRole.ADMIN
 
+class AuthenticatedView(BaseView):
+    def is_accessible(self):
+        return current_user.is_authenticated and current_user.user_role == UserRole.ADMIN
+
 class LogoutView(BaseView):
     @expose('/')
     def index(self):
@@ -45,19 +49,25 @@ class ChatAdmin(BaseView):
 class MyAdminIndex(AdminIndexView):
     @expose('/')
     def index(self):
-        total = 0.0
-        airline_name = request.args.get('airline_name')
-        date = request.args.get('month')
-        statistics = untils.statistic_revenue_follow_month(airline_name=airline_name,
-                                                          date=date)
-        for s in statistics:
-            if s[1]:
-                total = total + s[1]
-        return self.render('admin/index.html',statistics=statistics, total=total)
+        return self.render('admin/index.html')
 
 
 admin = Admin(app=app, name='QUẢN TRỊ MÁY BAY', template_mode='bootstrap4',
               index_view=MyAdminIndex())
+
+class StatsView(AuthenticatedView):
+    @expose('/', methods=["GET", "POST"])
+    def index(self):
+        total = 0.0
+        from_airport = request.form.get('start')
+        to_airport = request.form.get('finish')
+        date = request.form.get('month')
+        statistics = untils.statistic_revenue_follow_month(from_airport=from_airport,
+                                                           to_airport=to_airport, date=date)
+        for s in statistics:
+            if s[1]:
+                total = total + s[1]
+        return self.render('admin/statistic.html', statistics=statistics, total=total)
 
 class ModelView(AuthenticatedModelView):
     column_display_pk = True
@@ -76,8 +86,8 @@ class FlightForm(FlaskForm):
                                      validators=[InputRequired()])
     planes = SelectField('planes', choices=[])
     airlines = SelectField('airlines', choices=[])
-    rank = SelectField('ranks', choices=[])
     money = FloatField('money', validators=[InputRequired()])
+    money1 = FloatField('money1', validators=[InputRequired()])
 
     stop_time_begin = DateTimeLocalField(name="stop_time_begin", format="%Y-%m-%dT%H:%M")
     stop_time_finish = DateTimeLocalField(name="stop_time_finish", format="%Y-%m-%dT%H:%M")
@@ -107,7 +117,6 @@ class FlightManagementView(ModelView):
 
         form.planes.choices = [p.id for p in Airplane.query.all()]
         form.airlines.choices = [a for a in Airline.query.all()]
-        form.rank.choices = [r.name for r in Rank.query.all()]
         form.airport.choices = [ap.name for ap in Airport.query.all()]
 
         if request.method == "POST":
@@ -115,8 +124,8 @@ class FlightManagementView(ModelView):
             arriving_at = form.arriving_at.data
             plane = form.planes.data
             airline = form.airlines.data
-            rank = form.rank.data
             money = form.money.data
+            money1 = form.money1.data
             stb = form.stop_time_begin.data
             stf = form.stop_time_finish.data
             des = form.description.data
@@ -128,19 +137,31 @@ class FlightManagementView(ModelView):
                 try:
                     untils.save_flight(departing_at, arriving_at, plane, airline)
                     f = db.session.query(Flight).order_by(Flight.id.desc()).first()
-                    untils.save_price(rank, f.id, money)
+                    untils.save_price(2, f.id, money)
+                    untils.save_price(1, f.id, money1)
+
                 except:
+                    prices = (db.session.query(PriceOfFlight).order_by(PriceOfFlight.id.desc()).limit(2))
+                    for p in prices:
+                        print(p)
+                        untils.del_price(p.id)
                     sts_msg = 'Đã có lỗi xảy ra khi lưu chuyến bay! Vui lòng quay lại sau!'
 
                 if stb and stf:
                     am_msg = untils.check_stop_station(stb,stf, airline, ap, f.id)
                     if am_msg == 'success':
-                        # try:
-                        untils.save_airport_medium(stb, stf, des, f.id, ap)
-                        # except:
-                        #     untils.del_flight(f.id)
-                        #     am_msg = 'Đã có lỗi xảy ra khi lưu sân bay trung gian! Vui lòng quay lại sau!'
+                        try:
+                            untils.save_airport_medium(stb, stf, des, f.id, ap)
+                        except:
+                            prices = (db.session.query(PriceOfFlight).order_by(PriceOfFlight.id.desc()).limit(2))
+                            for p in prices:
+                                untils.del_price(p.id)
+                            untils.del_flight(f.id)
+                            am_msg = 'Đã có lỗi xảy ra khi lưu sân bay trung gian! Vui lòng quay lại sau!'
                     else:
+                        prices = (db.session.query(PriceOfFlight).order_by(PriceOfFlight.id.desc()).limit(2))
+                        for p in prices:
+                            untils.del_price(p.id)
                         untils.del_flight(f.id)
                         am_msg = am_msg
 
@@ -177,19 +198,6 @@ class FlightManagementView(ModelView):
                            apm_list=apm_list,
                            return_url=return_url)
 
-class Flight_Airportedium_View(ModelView):
-    column_labels = {
-        'id': 'Mã trạm dừng',
-        'stop_time_begin': 'Thời gian bắt đầu dừng',
-        'stop_time_finish': 'Thời gian tiếp tục bay',
-        'description': 'Mô tả'
-    }
-
-class PriceView(ModelView):
-    column_labels = {
-        'id': 'Mã giá',
-        'price': 'Giá'
-    }
 
 class TicketView(ModelView):
     column_labels = {
@@ -198,8 +206,7 @@ class TicketView(ModelView):
     }
 
 admin.add_view(FlightManagementView(Flight, db.session, name='Quản lý chuyến bay', endpoint='flights'))
-admin.add_view(Flight_Airportedium_View(Flight_AirportMedium, db.session, name='Quản lý trạm dừng', endpoint='stops'))
-admin.add_view(TicketView(PriceOfFlight, db.session, name='Quản lý giá', endpoint='prices'))
 admin.add_view(TicketView(PlaneTicket, db.session, name='Quản lý vé', endpoint='tickets'))
 admin.add_view(ChatAdmin(name='ChatAdmin'))
+admin.add_view(StatsView(name='Thống kê'))
 admin.add_view(LogoutView(name='Logout'))

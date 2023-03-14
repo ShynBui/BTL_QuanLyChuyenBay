@@ -21,7 +21,7 @@ def home():
         date = datetime.strptime(date, "%Y-%m-%d").date()
         for f in flights:
             f_d = f.departing_at.date()
-            if f.airline.departing_airport.name == start and f.airline.arriving_airport.name == finish \
+            if f.airline.departing_airport.location == start and f.airline.arriving_airport.location == finish \
                     and f_d == date:
                 if 'vip' in request.form:
                     p = untils.get_prices_of_flight(f.id)
@@ -357,7 +357,7 @@ def airports():
     for a in untils.load_airports():
         data.append({
             'id': a.id,
-            'name': a.name
+            'location': a.location
         })
 
     return jsonify(data)

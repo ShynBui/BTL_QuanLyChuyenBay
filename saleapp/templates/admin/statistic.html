@@ -1,0 +1,98 @@
+{% extends 'admin/base.html'%}
+{% block body %}
+<h1 class="text-center text-primary" style="margin: 20px 0px;">THỐNG KÊ DOANH THU THEO THÁNG</h1>
+
+<div class="row">
+    <div class="col-md-12 col xs-12">
+        <table class="table">
+            <tr>
+                <th>Mã tuyến bay</th>
+                <th>Doanh thu</th>
+                <th>Tổng lượt bay</th>
+                <th>Số vé đã bán</th>
+            </tr>
+            {% for s in statistics %}
+            <tr>
+                <td>{{ s[0] }}</td>
+                <td>
+                    {% if s[1] %}
+                    {{ "{:,.1f}".format(s[1]*1000) }} VNĐ
+                    {% else %}
+                    0 VNĐ
+                    {% endif %}
+                </td>
+                <td>{{ s[2] }}</td>
+                <td>{{ s[3] }}</td>
+            </tr>
+            {% endfor %}
+            <tr>
+                <th scope="row">Tổng doanh thu:</th>
+                <th scope="row">{{ "{:,.1f}".format(total*1000) }} VNĐ</th>
+            </tr>
+
+        </table>
+    </div>
+    <div class="col-md-4 col xs-12">
+        <h5 class="text-center text-info"> LỌC DỮ LIỆU </h5>
+        <form method="POST" class=" row g-3 needs-validation border" validate style="margin: 2% 0; padding: 2% 4%;">
+            <div class="col-12">
+                <label for="validationCustom01" class="form-label">Nơi đi:</label>
+                <select class="form-select" name="start" id="validationCustom01" required></select>
+            </div>
+            <div class="col-12">
+                <label for="validationCustom02" class="form-label">Nơi đến:</label>
+                <select class="form-select" name="finish" id="validationCustom02" required></select>
+            </div>
+            <div class="form-group">
+                <label for="month" class="form-label">Tháng:</label>
+                <input type="month" class="form-control" name="month" required
+                       id="month" placeholder="Nhập tháng năm..."/>
+            </div>
+            <div class="col-12">
+                <button class="btn btn-primary" type="submit">Thống kê</button>
+            </div>
+        </form>
+    </div>
+    <div class="col-md-8 col xs-12">
+        <canvas id="revenueChart"></canvas>
+    </div>
+</div>
+{% endblock %}
+{% block tail_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="{{ url_for('static', filename='js/fillValues.js') }}"></script>
+<script src="{{ url_for('static', filename='js/statistics.js') }}"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+<script>
+    let labels = []
+    let data = []
+    let colors = []
+    let borderColors = []
+    let r, g, b
+
+    {% for s in statistics %}
+    {% if s[1] %}
+    labels.push('{{ s[0] }}')
+    data.push({{ s[1] }})
+
+    r = parseInt(Math.random() * 255)
+    g = parseInt(Math.random() * 255)
+    b = parseInt(Math.random() * 255)
+
+    colors.push(`rgba(${r}, ${g}, ${b}, 0.2)`)
+    borderColors.push(`rgba(${r}, ${g}, ${b}, 0.4)`)
+    {% endif %}
+    {% endfor %}
+
+    window.onload = () => {
+        create_options();
+        const ctx = document.getElementById('revenueChart').getContext('2d')
+
+        loadChart(ctx, labels, data, 'bar', colors, borderColors)
+    }
+</script>
+{% endblock %}
