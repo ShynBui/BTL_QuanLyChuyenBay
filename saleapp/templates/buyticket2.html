@@ -12,9 +12,20 @@
 
 {% block content %}
 {% if current_user.is_authenticated %}
-<div class="base background test bg-secondary p-5">
+<div class="base background test bg-secondary p-5" style="min-height: 100vh">
     <div class="container-fluid p-5">
+        {% if not flights %}
+        <script>
+            alert("Không có chuyến bay phù hợp")
+            window.location="/buy-ticket";
+
+
+
+
+        </script>
+        {% endif %}
         {% for f in flights %}
+
         <div class="grid bg-white my-3 p-4 rounded-3">
             <div class="row">
                 <span class="my-sub-text text-secondary">Mã chuyến bay: {{f.id}}</span>
@@ -36,7 +47,8 @@
                     </div>
                 </div>
                 <div class="col-3">
-                    <button type="button" onclick="selectFlight({{f.id}})" class="p-3 button my-btn w-100 h-100 text-start d-flex align-items-center justify-content-between">
+                    <button type="button" onclick="selectFlight({{f.id}})"
+                            class="p-3 button my-btn w-100 h-100 text-start d-flex align-items-center justify-content-between">
                         <div>
                             <div class="fs-6">Giá từ</div>
                             <div class="fs-5">{{"{:,.0f}".format(f.prices[1].price*1000)}} VNĐ</div>
@@ -47,13 +59,21 @@
                     </button>
                 </div>
             </div>
-            <div>
-                <a class="text-secondary" data-toggle="collapse" href="#f-{{f.id}}" role="button"
-                   aria-expanded="false" aria-controls="collapseExample">
-                    Xem chi tiết <i class="fa-solid fa-caret-right my-secondary-text"></i>
-                </a>
+            <div class="d-flex text-secondary col-9">
+                <div class="button__show" onclick="onClickBtn()">
+                    <a class="text-secondary" data-bs-toggle="collapse" href="#f-{{f.id}}" role="button"
+                       aria-expanded="false" aria-controls="collapseExample">
+                        Xem chi tiết <i class="fa-solid fa-caret-right my-secondary-text"></i>
+                    </a>
+                </div>
+                <div class="ms-auto me-5">Số ghế thương gia: <span style="color: var(--primary-color)">{{f.vip_seats_count}}</span>
+                </div>
+                <div class="">Số ghế phổ thông: <span style="color: var(--primary-color)">{{f.seats_count}}</span>
+                </div>
             </div>
-            <div class="collapse mt-3" id="f-{{f.id}}">
+
+
+            <div class="collapse mt-3 tag__sub" id="f-{{f.id}}f-{{f.id}}">
                 <div class="card card-body text-dark">
                     <div>
                         <div class="my-secondary-text">{{f.departing_at.strftime('%d thg %m, %H:%M')}}</div>
@@ -92,7 +112,7 @@
 Vui lòng đăng nhập
 {% endif %}
 {% endblock %}
-
 {% block footer %}
-    {%endblock%}
+
+{%endblock%}
 

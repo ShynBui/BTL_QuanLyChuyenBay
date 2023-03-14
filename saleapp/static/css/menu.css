@@ -1,0 +1,100 @@
+a {
+    text-decoration: none !important;
+}
+
+div.main-menu {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding-top: 7px;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.25);
+  }
+
+  .main-menu img {
+    width: 16%;
+    height: 80px;
+  }
+
+  .menu {
+    height: 60px;
+  }
+
+  .menu-items {
+    width: 100%;
+    height: 100%;
+  }
+
+  .menu-items li {
+    height: 100%;
+    margin-top: 20px;
+  }
+
+   .menu-items li:last-child {
+    position: relative;
+  }
+
+  .menu-items li a {
+    display: block;
+    padding: 5px 20px;
+    line-height: 29.5px;
+    font-size: 17.5px;
+    letter-spacing: 2px;
+    color: rgb(200, 234, 251);
+  }
+
+  .menu-items li a:hover {
+    background: lightblue;
+    border-radius: 120px;
+    color: white;
+    text-decoration: none;
+  }
+
+  .menu-items li:last-child a:hover {
+    background: transparent;
+  }
+
+  .menu-items li:last-child a:hover i {
+    color: white;
+  }
+
+  @font-face {
+    font-family: Slogan;
+    src: url(/static/font/BonheurRoyale-Regular.ttf);
+  }
+
+          /* ----- user ----- */
+
+  .fa-user {
+    color: lightblue;
+    font-size: 35px;
+  }
+
+  .menu-user {
+    position: absolute;
+    top: 60px;
+    right: -120%;
+    width: 250px;
+    background: rgba(255, 255, 255, 0.35);
+    border-radius: 100px;
+     visibility: hidden;
+  }
+
+  .menu-user::before {
+    content: " ";
+    border-width: 12px;
+    border-style: solid;
+    border-color: transparent transparent rgba(255, 255, 255, 0.35) transparent;
+    position: absolute;
+    top: -24px;
+
+  }
+
+  .menu-user > div > a {
+    font-size: 14px;
+    color: #055c81;
+  }
+
+  .user:hover .menu-user {
+    visibility: visible;
+  }

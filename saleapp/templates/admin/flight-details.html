@@ -1,0 +1,86 @@
+{% extends 'admin/model/details.html' %}
+
+{% block body %}
+{{ super() }}
+
+{% block price %}
+{% if price: %}
+{% for p in price %}
+<table class="table table-hover table-bordered searchable">
+    <tr>
+        <td>
+            <b>Giá vé/ghế</b>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <div class="form-group row">
+                <label class="col-sm-3 col-form-label">Giá:</label>
+                <div class="col-sm-9">
+                    <input type="text" class="form-control"
+                           name="time-stop-begin" value="{{p.price * 1000}}" disabled>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-3 col-form-label">Hạng:</label>
+                <div class="col-sm-9">
+                    <input type="text" class="form-control"
+                           name="time-stop-finish" value="{{p.rank.name}}" disabled>
+                </div>
+            </div>
+        </td>
+    </tr>
+</table>
+{%endfor%}
+{% endif %}
+{% endblock%}
+
+{% block apm_details_table %}
+{% if apm_list: %}
+{% for apm in apm_list %}
+<table class="table table-hover table-bordered searchable">
+    <tr>
+        <td>
+            <b>Trạm dừng</b>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <div class="form-group row">
+                <label class="col-sm-3 col-form-label">Thời gian bắt đầu dừng:</label>
+                <div class="col-sm-9">
+                    <input type="datetime-local" class="form-control"
+                           name="time-stop-begin" value="{{apm.stop_time_begin}}" disabled>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-3 col-form-label">Thời gian dừng kết thúc:</label>
+                <div class="col-sm-9">
+                    <input type="datetime-local" class="form-control"
+                           name="time-stop-finish" value="{{apm.stop_time_finish}}" disabled>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-3 col-form-label">Mô tả:</label>
+                <div class="col-sm-9">
+                    <input type="text" class="form-control" name="description"
+                           value="{{apm.description}}" disabled>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-3 col-form-label">Sân bay dừng:</label>
+                <div class="col-sm-9">
+                    <input type="text" class="form-control" name="description"
+                           value="{{apm.airport.name}}" disabled>
+                </div>
+            </div>
+        </td>
+    </tr>
+</table>
+{% endfor %}
+{% else %}
+<p class="text-primary"><span class="text-secondary">Ghi chú:</span> Chuyến bay này không có trạm dừng.</p>
+{% endif %}
+{% endblock %}
+
+{% endblock %}

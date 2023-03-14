@@ -1,16 +1,41 @@
 import math
-import datetime
+from datetime import datetime
 from flask import render_template, request, redirect, session, jsonify, url_for
-from saleapp import app, admin, login, untils, socketio, dao, utils
+from saleapp import app, admin, login, untils, socketio, dao, utils, sendmail
 from saleapp.models import UserRole
 from flask_login import login_user, logout_user, login_required, current_user
 import cloudinary.uploader
 from flask_socketio import SocketIO, emit, join_room
 
 
-@app.route("/")
+@app.route("/", methods=('GET', 'POST'))
 def home():
-    return render_template('index.html')
+    flights = untils.load_flights()
+    data_fill = flights
+    len_of_flights = len(data_fill)
+    if request.method == "POST":
+        data_fill = []
+        start = request.form['start']
+        finish = request.form['finish']
+        date = request.form['date']
+        date = datetime.strptime(date, "%Y-%m-%d").date()
+        for f in flights:
+            f_d = f.departing_at.date()
+            if f.airline.departing_airport.name == start and f.airline.arriving_airport.name == finish \
+                    and f_d == date:
+                if 'vip' in request.form:
+                    p = untils.get_prices_of_flight(f.id)
+                    for pr in p:
+                        if pr.rank.name == 'Thương gia':
+                            data_fill.append(f)
+                else:
+                    data_fill.append(f)
+        len_of_flights = len(data_fill)
+    return render_template('index.html', data_fill=data_fill, len_of_flights=len_of_flights)
+
+@app.route("/news")
+def news():
+    return render_template('news.html')
 
 
 # socket
@@ -24,16 +49,25 @@ def chat_room():
 
     user_send = [untils.get_user_by_id(x.user_id).name for x in untils.load_message(room.room_id)]
 
+    user_image = [untils.get_user_by_id(x.user_id).avatar for x in untils.load_message(room.room_id)]
+
+    user_id = [x.user_id for x in untils.load_message(room.room_id)]
+
+    host_avatar = untils.get_host_room_avatar(room.room_id);
+
     user_send.pop(0)
+    user_image.pop(0)
+    user_id.pop(0)
 
     print(user_send)
 
     if user_name and room:
 
         print(untils.load_message(room.room_id)[0].content)
-        return render_template('chatroom.html', user_name=user_name, room=room.room_id, name=current_user.name,
-                               message=untils.load_message(room.room_id), room_id=int(room.room_id),
-                               user_send=user_send, n=len(user_send))
+        return render_template('chatroom.html', user_name=user_name, room=room.room_id, name= current_user.name,
+                               message=untils.load_message(room.room_id), room_id = int(room.room_id),
+                               user_send= user_send, n=len(user_send), user_image=user_image, user_id=user_id, room_name = untils.get_chatroom_by_id(room.room_id),
+                               host_avatar=host_avatar);
     else:
         return redirect(url_for('home'))
 
@@ -63,6 +97,8 @@ def handle_send_message_event(data):
     app.logger.info("{} has sent message to the room {}: {}".format(data['username'],
                                                                     data['room'],
                                                                     data['message']))
+
+    app.logger.info("{}".format(data['user_avatar']))
     socketio.emit('receive_message', data, room=data['room'])
 
 
@@ -184,7 +220,20 @@ def buy_ticket2():
     date = request.args.get('date')
     flights = dao.get_flights(FROM, TO, date)
     for f in flights:
+        seats = dao.get_seat()
+        vip_seats_count = 0
+        seats_count = 0
+        for s in seats:
+            if dao.is_seat_available(seat_id=s.id, flight_id=f.id):
+                if s.rank_id == 1:
+                    vip_seats_count += 1
+                else:
+                    seats_count += 1
         f.fa_amount = len(f.airportMediums)
+        f.vip_seats_count = vip_seats_count
+        f.seats_count = seats_count
+        if vip_seats_count == 0 and seats_count == 0:
+            flights.remove(f)
     return render_template('buyticket2.html', flights=flights)
 
 
@@ -233,11 +282,11 @@ def total():
     return jsonify(utils.cart_stats(cart["seats"]))
 
 
-@app.route('/buy-ticket/step-3')
+@app.route('/buy-ticket/step-3/')
 def buy_ticket3():
     key = app.config['CART_KEY']
     if key not in session or "flight_id" not in session[key]:
-        redirect("/buy-ticket", code=404)
+        return redirect("/buy-ticket")
     cart = session.get(key)
     if "seats" in cart:
         del cart["seats"]
@@ -276,8 +325,41 @@ def buy_ticket3():
 @app.route("/buy-ticket/step-4")
 def cus_form():
     key = app.config['CART_KEY']
+    if key not in session or "flight_id" not in session[key] or "seats" not in session[key] or len(
+            session[key]["seats"]) == 0:
+        return redirect("/buy-ticket")
+    key = app.config['CART_KEY']
     seats = session[key]["seats"]
     return render_template('fillform.html', seats=seats)
+
+
+@app.route("/api/index/")
+def airports():
+    data = []
+
+    for a in untils.load_airports():
+        data.append({
+            'id': a.id,
+            'name': a.name
+        })
+
+    return jsonify(data)
+
+
+@app.route("/api/index/price/")
+def prices():
+    data = []
+
+    for f in untils.load_flights():
+        p = untils.get_prices_of_flight(f.id)
+        for pr in p:
+            data.append({
+                'flight_id': pr.flight_id,
+                'rank': pr.rank.name,
+                'price': pr.price
+            })
+
+    return jsonify(data)
 
 
 @app.route("/api/cart/pay", methods=['POST'])
@@ -309,11 +391,21 @@ def get_orders():
 
 @app.route('/order/<order_id>')
 def detail_order(order_id):
-
     id = current_user.id
 
     ords = dao.get_order(user_id=id, order_id=order_id)
     return render_template('tickets.html', tickets=ords.tickets)
+
+
+@app.route('/api/otp', methods=["POST"])
+def send_otp():
+    data = request.json
+    email = data["email"]
+    name = data["name"]
+    otp = utils.generateOTP()
+    sendmail.send(name, email, otp)
+
+    return jsonify({"otp": otp})
 
 
 if __name__ == '__main__':

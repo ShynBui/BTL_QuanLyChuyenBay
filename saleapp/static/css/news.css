@@ -1,0 +1,301 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap");
+:root {
+  --main-color: #6dbfe2;
+}
+
+html, body {
+  height: 100%;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Roboto", sans-serif;
+}
+
+.body {
+  font-size: 15px;
+  font-family: monospace;
+}
+
+section {
+  margin-top: 50px;
+}
+  
+ul {
+  list-style-type: none;
+}
+  
+a {
+  text-decoration: none;
+}
+  
+.flex {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+h2 {
+    text-align: center;
+    margin: 0 0 25px;
+    color: var(--main-color);
+    position: relative;
+    font-size: 35px;
+  }
+
+  h2::before {
+    position: absolute;
+    content: "";
+    height: 3px;
+    width: 150px;
+    background-color: var(--main-color);
+    border-radius: 10px;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  h2::after {
+    position: absolute;
+    content: "\2764";
+    top: 95%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 50px;
+    height: 30px;
+    color: red;
+    background-color: #fff;
+    bottom: -20px;
+  }
+
+h3 {
+  color: powderblue !important;
+  padding: 5px 0;
+}
+
+/* -----header----- */
+
+header {
+    height: 100%;
+    background: url('https://res.cloudinary.com/di4bpbe6z/image/upload/v1678457925/bg_kppdhb.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    width: 100%;
+  }
+
+  .menu-items > li.news a{
+    position: relative;
+  }
+
+  .menu-items > li.news a::after {
+    content: " ";
+    width: 50px;
+    border-width: 1%;
+    border-radius: 10px;
+    border-style: solid;
+    position: absolute;
+    bottom: 0px;
+    left: 25.5px;
+  }
+
+  .welcom {
+    height: calc(100% - 87px);
+    text-align: center;
+    background: rgba(0, 0, 0, 0.25);
+  }
+
+  .welcom span {
+    font-family: Slogan;
+    display: inline-block;
+    width: 75%;
+    color: paleturquoise;
+    font-size: 90px;
+  }
+
+/* ----- Tour hot -----*/
+.col50 {
+  width: 50%;
+}
+
+.col33 {
+  width: 33.33%;
+}
+
+.row33 {
+  height: 33.33%;
+}
+
+.cover-items{
+  flex-wrap: wrap;
+}
+
+.items {
+    margin: 5%;
+  }
+
+  .cover {
+    padding: 15px;
+    background: rgba(0, 0, 0, 0.35);
+    width: 100%;
+    height: 100%;
+  }
+
+  .item-title > h3 {
+    text-align: center;
+  }
+
+  .rating i:first-child {
+   color: #ffeb8d;
+  }
+  
+  .rating i:nth-child(2) {
+    color: #fed46b;
+  }
+  
+  .rating i:nth-child(3) {
+    color: #fbb53d;
+  }
+  
+  .rating i:nth-child(4) {
+    color: #fa9e1b;
+  }
+  
+  .rating i:nth-child(5) {
+    color: #ef910a;
+  }
+
+  .item-title .rating > p {
+    padding: 5px 0;
+    color: navajowhite;
+  }
+
+  .item-info {
+    justify-content: flex-end;
+    margin-right: 10%;
+  }
+
+  .item-info p {
+      color: lightcyan;
+      padding: 5px 0;
+    }
+
+    .item1 {
+      background: url('https://res.cloudinary.com/di4bpbe6z/image/upload/v1678457925/mocchau_ud9jqs.jpg') no-repeat;
+      background-size: cover;
+    }
+
+    .item2 {
+      background: url('https://res.cloudinary.com/di4bpbe6z/image/upload/v1678457924/ba-na-hill_a34iyq.jpg') no-repeat;
+      background-size: cover;
+    }
+
+    .item3 {
+      background: url('https://res.cloudinary.com/di4bpbe6z/image/upload/v1678457925/hoian-slide_cze3lz.jpg') no-repeat;
+      background-size: cover;
+    }
+
+    .item4 {
+      background: url('https://res.cloudinary.com/di4bpbe6z/image/upload/v1678457924/Dalat1_zem3it.jpg') no-repeat;
+      background-size: cover;
+    }
+
+    .item5 {
+      background: url('https://res.cloudinary.com/di4bpbe6z/image/upload/v1678457926/nhaTrang_qo9cdc.jpg') no-repeat;
+      background-size: cover;
+    }
+
+    .item6 {
+      background: url('https://res.cloudinary.com/di4bpbe6z/image/upload/v1678457929/phu-quoc_hjelgy.jpg') no-repeat;
+      background-size: cover;
+    }
+
+/* -----Cẩm nang du lịch----- */
+
+.col30 {
+  width: 30%;
+}
+
+.col70 {
+  width: 70%;
+  padding: 0 2%;
+}
+
+.handbook-content {
+    margin: 5%;
+  }
+
+  .handbook-items {
+      width: 75%;
+    }
+
+    .handbook-item:nth-child(2) {
+      margin: 5% 0;
+      padding-left: 0;
+    }
+
+    .handbook-item h3 {
+      color: tomato !important;
+    }
+
+    .handbook-item > div.col70 {
+      height: 181.66px;
+    }
+
+    .handbook-item p{
+      padding: 0 0 7.5px;
+    }
+
+    .handbook-item > .col70 > p.date{
+      color: rgb(131, 128, 128);
+    }
+
+    .handbook-item .info {
+      height: 121.66px;
+      overflow: auto;
+    }
+
+    .handbook-item img{
+      width: 110%;
+    }
+
+/* -----kinh nghiem du lich----- */
+.experience {
+  margin: 0 5%;
+}
+
+.content {
+    height: calc(100% - 127px);
+  }
+
+  .E-items {
+    height: 90%;
+    margin: 2.5% 0 7.5%;
+  }
+
+  .E-item {
+    padding: 10px 15px;
+  }
+
+  .E-item h3 {
+    color: darkcyan !important;
+    height: 5%;
+  }
+
+  .E-item > .img {
+    height: 50%;
+  }
+
+  .E-item img {
+    width: 100%;
+  }
+
+  .E-item .E-info {
+    height: 120px;
+    overflow: auto;
+  }
+
+  .E-item .E-info p {
+    font-size: 14px;
+  }

@@ -118,6 +118,7 @@ function pay(){
                 "Content-Type": "application/json"
             }
         }).then(res => res.json()).then((data) => {
+            alert("Thanh toán thành công")
             window.location=`/order/${data["order_id"]}`
         })
     }
@@ -139,3 +140,8 @@ function showBarCode(id) {
       displayValue: false
     });
 }
+
+//button_click.addEventListener("click", onClickButton);
+//function onClickButton(){ta
+//    console.log(123);
+//}
