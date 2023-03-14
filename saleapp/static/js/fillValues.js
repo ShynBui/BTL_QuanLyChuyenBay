@@ -4,7 +4,7 @@ function create_options() {
     .then(res => res.json())
     .then(data => {
         data.forEach((item, index) => {
-            option += `<option id="${index}" value="${item.name}">${item.name}</option>`
+            option += `<option id="${index}" value="${item.location}">${item.location}</option>`
         })
 
         let select_container = document.getElementById("validationCustom01");

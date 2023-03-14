@@ -54,18 +54,19 @@
         </div>
         {{ form.csrf_token }}
         <div class="form-group ">
-            <label class="control-label">Giá 1 vé/ghế
+            <label class="control-label">Giá 1 vé/ghế hạng phổ thông
                 <strong style="color: red">*</strong>
             </label>
             {{ form.money(class="form-control") }}
         </div>
         {{ form.csrf_token }}
         <div class="form-group ">
-            <label class="control-label">Hạng vé
+            <label class="control-label">Giá 1 vé/ghế hạng thương gia
                 <strong style="color: red">*</strong>
             </label>
-            {{ form.rank(class="form-control") }}
+            {{ form.money1(class="form-control") }}
         </div>
+
         {{ form.csrf_token }}
         <div class="form-group ">
             <label class="control-label">Thời gian bắt đầu dừng

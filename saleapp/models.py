@@ -2,13 +2,10 @@ import hashlib
 
 from sqlalchemy import DECIMAL, Column, Integer, String, Float, Boolean, DateTime, ForeignKey, Text, Enum
 from sqlalchemy.orm import relationship, backref
-from saleapp import db, app, decoding, encoding
+from saleapp import db, app
 from datetime import datetime
 from enum import Enum as UserEnum
 from flask_login import UserMixin
-
-from saleapp.decoding import decoding_no1, decoding_no2
-from saleapp.encoding import encoding_no1, encoding_no2
 
 
 class BaseModel(db.Model):
@@ -115,7 +112,7 @@ class Airline(BaseModel):
                            , backref='airline', lazy=True, passive_deletes=True, cascade="all, delete")
 
     def __str__(self):
-        return str(f'{self.departing_airport.code} - {self.arriving_airport.code}')
+        return str(f'{self.departing_airport.name} - {self.arriving_airport.name}')
 
 
 class Flight(BaseModel):
