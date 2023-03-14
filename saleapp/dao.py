@@ -1,9 +1,11 @@
 from flask_login import current_user
 
-from saleapp import app, db, encoding
+from saleapp import app, db, encoding, decoding
 from sqlalchemy import or_, and_, not_, func, extract
 from sqlalchemy.orm import aliased
 from saleapp.models import *
+
+
 
 
 def get_flights(FROM, TO, date):
@@ -56,6 +58,7 @@ def is_seat_available(seat_id, flight_id):
 def get_price(flight_id, rank_id):
     return PriceOfFlight.query.filter(
         and_(PriceOfFlight.flight_id.__eq__(flight_id), PriceOfFlight.rank_id.__eq__(rank_id))).first()
+
 
 
 def save_order(cart, total_price):

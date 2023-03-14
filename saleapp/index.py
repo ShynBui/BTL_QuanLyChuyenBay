@@ -70,6 +70,7 @@ def chat_room():
     if user_name and room:
 
         print(untils.load_message(room.room_id)[0].content)
+
         return render_template('chatroom.html', user_name=user_name, room=room.room_id, name=current_user.name,
                                message=untils.load_message(room.room_id), room_id=int(room.room_id),
                                user_send=user_send, n=len(user_send), user_image=user_image, user_id=user_id,

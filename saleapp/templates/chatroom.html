@@ -3,164 +3,72 @@
 {% block title %} Trang chu {% endblock %}
 
 
+{% block content %}
 
+<div class="header__chat">
+<!--    <h1> Hi: {{current_user.username}}</h1>-->
+    <img src={{host_avatar}} style="width:40px; border-radius:50px;height:40px; margin-left:10px"  alt="">
+<h1 style="font-size:20px; padding-left:10px;">
+    {{room_name}}
+    <b><i data-visualcompletion="css-img" aria-label="Tài khoản đã xác minh" class="" role="img" style="background-image: url(&quot;https://static.xx.fbcdn.net/rsrc.php/v3/yt/r/a-Rc8GEsXL2.png&quot;); background-position: -170px -62px; background-size: 190px 186px; width: 16px; height: 16px; background-repeat: no-repeat; display: inline-block;"></i></b>
+</h1>
 
-
-
-{% block header %}
-<div class="main">
-<header style="height: 87px;">
-    <div class="main-menu">
-        <img src="https://res.cloudinary.com/doaux2ndg/image/upload/v1670076219/FlightMangement/logo_komha6.png" alt="logo">
-        <div class="menu">
-            <ul class="flex menu-items">
-                <li>
-                    <a class="nav-link" href="{{url_for('home')}}">Trang chủ <span class="sr-only"></span></a>
-                </li>
-                {%if current_user.is_authenticated %}
-
-            <li class="nav-item">
-                <a class="nav-link" href="{{url_for('buy_ticket')}}">Mua vé</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{{url_for('get_orders')}}">Xem các đơn đã mua</a>
-            </li>
-
-            <li class="nav-item active">
-                <a class="nav-link" href="{{url_for('chat_room')}}">Chat room <span class="sr-only"></span></a>
-            </li>
-            {%else%}
-            <li class="nav-item">
-                <a class="nav-link" href="{{url_for('user_signin')}}">Đăng nhập</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{{url_for('user_register')}}">Đăng ký</a>
-            </li>
-            {%endif%}
-                <li>
-                    <div class="user">
-                        <a href="#"><i class="fas fa-user"></i></a>
-                        <div class="flex menu-user">
-                            {% if current_user.is_authenticated %}
-                                <div class="flex" id="admin">
-                                    <a href="/admin">Quản trị</a>
-                                </div>
-                                <div>
-                                    <span>/</span>
-                                </div>
-                                <div class="flex logout">
-                                    <a href="{{url_for('user_signout')}}">Đăng xuất</a>
-                                </div>
-                            {% else %}
-                                <div class="flex">
-                                    <a href="/register">Đăng ký</a>
-                                </div>
-                                <div>
-                                    <span>/</span>
-                                </div>
-                                <div class="flex" id="login">
-                                    <a href="javascript:void(0);">Đăng nhập</a>
-                                </div>
-                            {% endif %}
-                        </div>
+<div class="icon__header">
+                    <div class="phone">
+                        <i class='bx bxs-phone bx-sm'></i>
                     </div>
-                </li>
-            </ul>
-        </div>
-    </div>
-
-<!--    <div class="flex Slogan">-->
-<!--        <div class="flex Slogan-text">-->
-<!--            <p>-->
-<!--                Hành trình nghìn dặm bắt đầu từ một bước chân.-->
-<!--            </p>-->
-<!--        </div>-->
-
-<!--        <div class="Slogan-btn">-->
-<!--            <div class="out-line">-->
-<!--                <div class="in-line">-->
-<!--                    <a href="{{url_for('buy_ticket')}}" target="_self">ĐẶT VÉ NGAY!!!</a>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </div>-->
-
-
-    <script src="{{ url_for('static', filename='js/login.js') }}"></script>
-</header>
-{%endblock%}
-    {% block content %}
-
-    <div class="header__chat">
-
-        <img src={{host_avatar}} style="width:40px; border-radius:50px;height:40px; margin-left:10px"  alt="">
-    <h1 style="font-size:20px; padding-left:10px;">
-        {{room_name}}
-        <b><i data-visualcompletion="css-img" aria-label="Tài khoản đã xác minh" class="" role="img" style="background-image: url(&quot;https://static.xx.fbcdn.net/rsrc.php/v3/yt/r/a-Rc8GEsXL2.png&quot;); background-position: -170px -62px; background-size: 190px 186px; width: 16px; height: 16px; background-repeat: no-repeat; display: inline-block;"></i></b>
-    </h1>
-
-    <div class="icon__header">
-                        <div class="phone">
-                            <i class='bx bxs-phone bx-sm'></i>
-                        </div>
-                        <div class="video">
-                            <i class='bx bxs-video bx-sm'></i>
-                        </div>
-                        <div class="sub__dot">
-                            <i class='bx-sm bx bx-dots-horizontal-rounded' ></i>
-                        </div>
+                    <div class="video">
+                        <i class='bx bxs-video bx-sm'></i>
                     </div>
-    </div>
-
-
-    <div class="mid__chat">
-        <path d="M20.685.12c-2.229.424-4.278 1.914-6.181 3.403L5.4 10.94c-2.026 2.291-5.434.62-5.4-2.648V.12h20.684z"></path>
-        {%for i in range(n)%}
-        {%if current_user.id == user_id[i]%}
-
-        <div style="display: flex;align-items: center;justify-content: flex-end;margin-top:25px">
-
-            <div class="my__text"> <b>{{user_send[i]}}</b>: {{message[i + 1].content}} </div>
-            <img src="{{user_image[i]}}" alt="" style="width: 40px;height: 40px;border-radius: 50%;margin-left: 10px;">
-        </div>
-        {%else%}
-
-            <div style="display: flex;align-items: center;justify-content: flex-start;margin-top:25px">
-
-            <img src="{{user_image[i]}}" alt="" style="width: 40px;height: 40px;border-radius: 50%;margin-right: 10px;">
-            <div class="other__text"><b>{{user_send[i]}}</b>: {{message[i + 1].content}} </div>
-        </div>
-        {%endif%}
-
-    {%endfor%}
-            <div id="messages"></div>
-
-
-    </div>
-    {% endblock %}
-
-    {% block footer %}
-
-    <div class="bot__chat">
-        <form id="message_input_form">
-        <input type="text" id="message_input" placeholder="Enter message here" />
-        <button id="submit" type="submit" name="message"><i class='bx bxs-send bx-sm'></i></button>
-        <div class="emoji">
-            <i class='bx bx-smile bx-sm'></i>
-            <div class="album_emoji">
-                <div class="boxed">
-
+                    <div class="sub__dot">
+                        <i class='bx-sm bx bx-dots-horizontal-rounded' ></i>
+                    </div>
                 </div>
+</div>
+
+<div class="mid__chat">
+    <path d="M20.685.12c-2.229.424-4.278 1.914-6.181 3.403L5.4 10.94c-2.026 2.291-5.434.62-5.4-2.648V.12h20.684z"></path>
+    {%for i in range(n)%}
+    {%if current_user.id == user_id[i]%}
+
+    <div style="display: flex;align-items: center;justify-content: flex-end;margin-top:25px">
+
+        <div class="my__text"> <b>{{user_send[i]}}</b>: {{message[i + 1].content}} </div>
+        <img src="{{user_image[i]}}" alt="" style="width: 40px;height: 40px;border-radius: 50%;margin-left: 10px;">
+    </div>
+    {%else%}
+
+        <div style="display: flex;align-items: center;justify-content: flex-start;margin-top:25px">
+
+        <img src="{{user_image[i]}}" alt="" style="width: 40px;height: 40px;border-radius: 50%;margin-right: 10px;">
+        <div class="other__text"><b>{{user_send[i]}}</b>: {{message[i + 1].content}} </div>
+    </div>
+    {%endif%}
+{%endfor%}
+    <div id="messages"></div>
+</div>
+
+
+<div class="bot__chat">
+    <form id="message_input_form">
+    <input type="text" id="message_input" placeholder="Enter message here" />
+    <button id="submit" type="submit" name="message"><i class='bx bxs-send bx-sm'></i></button>
+    <div class="emoji">
+        <i class='bx bx-smile bx-sm'></i>
+        <div class="album_emoji">
+            <div class="boxed">
+
             </div>
-
-
         </div>
 
-    </form>
+
     </div>
 
-    {%endblock%}
+</form>
+</div>
 
+
+{% endblock %}
 
 {% block css %}
 <link href="{{ url_for('static', filename='css/chatroom.css') }}"
@@ -174,7 +82,6 @@
 <script>
         const $ = document.querySelector.bind(document)
         const $$ = document.querySelectorAll.bind(document)
-
         const emojis = {
     album_emoji: [
         {
@@ -290,7 +197,7 @@ emojis.start();
         const album_emojis = $('.album_emoji');
         const emoji_icon = $('.emoji');
         const mid_chat = $('.mid__chat');
-        mid_chat.scrollTop = mid_chat.scrollHeight;
+
 
         mid_chat.addEventListener('click', onClickMidChat)
 
@@ -347,7 +254,6 @@ emojis.start();
                     room: {{room_id}}
                     }
                 )
-
             }
 
         });
@@ -389,8 +295,8 @@ emojis.start();
             document.getElementById('messages').appendChild(newNode);
 
             let all_message = document.getElementById('messages')
+            console.log(all_message)
 
-            mid_chat.scrollTop+=160;
         });
         socket.on('join_room_announcement', function (data) {
             console.log(data);
@@ -398,9 +304,6 @@ emojis.start();
             newNode.innerHTML = data['username'] + ' has join the room'
             document.getElementById('messages').appendChild(newNode);
         });
-
-
-
 
 </script>
 <script src="{{ url_for('static', filename='js/chatroom.js') }}"></script>
